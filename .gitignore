@@ -4,9 +4,8 @@
 
 # Un-ignore specific files and directories
 !.gitignore
-!*.py
 !README.md
-!flowchart.png``
+!flowchart.png
 
 # Un-ignore directories that might contain .py files
 !src_pipeline/
