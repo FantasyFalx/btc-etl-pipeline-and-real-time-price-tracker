@@ -1,0 +1,17 @@
+# Ignore everything
+*
+.*
+
+# Un-ignore specific files and directories
+!.gitignore
+!*.py
+!README.md
+!flowchart.png``
+
+# Un-ignore directories that might contain .py files
+!src_pipeline/
+!src_pipeline/pipeline/
+!src_pipeline/pipeline/pubsub/
+!src_pipeline/pipeline/dataflow/
+!terraform_gcp_resources/main.tf
+!btc_dashboard/main.py
