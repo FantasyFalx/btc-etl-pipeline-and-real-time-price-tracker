@@ -14,6 +14,16 @@ from googleapiclient.errors import HttpError
 from configs.configs import GECKO_SECRET_URI, PUB_SUB_SA_SECRET_URI, PROJECT_ID, TOPIC_ID
 
 
+import logging
+import sys
+
+# Add this to see output in your VM terminal
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
 try:
     logging.info("Creating GCP secret manager client")
     secret_client = secretmanager.SecretManagerServiceClient()
@@ -86,11 +96,8 @@ def publish_tester() -> None:
      pub_sub_publisher()
      
 def publisher_production_runner() -> None:
-    message_number = 0
     while True: 
-        message_number += 1
-        logging.info("Run: %s", message_number)
-        print(f"Message: {1}", message_number)
+        logging.info("Publishing to pub/sub topic.")
         pub_sub_publisher()
     
 if __name__ == "__main__":

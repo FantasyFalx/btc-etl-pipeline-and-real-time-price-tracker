@@ -108,7 +108,6 @@ def pipeline_runner() -> None:
         # -----------------------------------------------------------------------
                     
 if __name__ == "__main__":
-    # Local Runner for testing purposes
     pipeline_runner()
 
  

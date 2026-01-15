@@ -1,6 +1,8 @@
 # Ignore everything
 *
 .*
+src_pipeline/pipeline/dataflow/dflow_test_functions.py
+terraform_gcp_resources/production.auto.tfvars
 
 # Un-ignore specific files and directories
 !.gitignore
