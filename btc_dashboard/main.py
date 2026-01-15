@@ -15,7 +15,7 @@ from utils.data_puller import get_data, bq_client_creator
 # Runtime Constants
 PROJECT_ID = st.secrets["PROJECT_ID"]
 
-# Loggin level
+# Logging level
 logging.basicConfig(format="%(message)s",
     level=logging.INFO,
 )
@@ -51,6 +51,7 @@ placeholder_2 = st.empty()
 placeholder_3 = st.empty()
 placeholder_4 = st.empty()
 
+@st.fragment("run_every", ttl=120)
 def main():
     
      
@@ -65,7 +66,7 @@ def main():
     except HttpError as e:
         logging.error("Failed pulling data from big query.")
         st.error(f"Error: {e}")
-        sys.exit()    
+        st.stop()
     # Live price tracking chart configurations.("Chart creation was assisted by gemini. ")
     chart = alt.Chart(chart_data).mark_line().encode(
         x=alt.X("event_time:T", axis=alt.Axis(format="%H:%M", tickCount="hour", title="Time in Minutes")),
@@ -81,13 +82,13 @@ def main():
         avg_price = metric_data["btc_average_price"].mean()
         volume = metric_data["btc_volume"].mean()
         price_change = metric_data["btc_price_change"].tail(1).values[0] # Most recent price update
-    except IndexError as i:
+    except (IndexError, KeyError) as e:
         price_change = 0
         min_price = 0
         max_price = 0
         avg_price = 0
         volume = 0
-        logging.error("Error: %s", i)
+        logging.error("Error extracting metrics: %s", e)
         
     
     # Date extracts for dashboard formatting. 
@@ -97,8 +98,8 @@ def main():
         with st.container(horizontal=True, width=700, horizontal_alignment="center"):
             st.title("₿ Bitcoin Price Dashboard ₿", text_alignment="center")
             st.subheader(f"Live Price Updates Per Minute for {current_date}", text_alignment="center")
-        with placeholder_2.container(horizontal=True, width=700, horizontal_alignment="center"):
-            st.altair_chart(chart, width="stretch")
+    with placeholder_2.container(horizontal=True, width=700, horizontal_alignment="center"):
+        st.altair_chart(chart, width="stretch")
     with placeholder_3.container(width=1500, horizontal_alignment="center", gap="medium", horizontal=True):
         st.subheader("Key Metrics", text_alignment="center")
     with placeholder_4.container(horizontal=True, width=1500, horizontal_alignment="center"):
@@ -120,10 +121,8 @@ def main():
                 st.metric(label="Price Changes", value=millify(price_change))
             
     # Resets the components to pull the most recent data        
-    time.sleep(60)
     placeholder_2.empty()
     placeholder_4.empty()
-    st.rerun()
-                
+    st.rerun()                
 if __name__ == "__main__":
     main()

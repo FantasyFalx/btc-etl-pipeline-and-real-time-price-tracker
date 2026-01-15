@@ -4,6 +4,7 @@ from datetime import datetime
 import time
 import logging
 from urllib.error import HTTPError
+import sys
 # 3rd party
 from pycoingecko import CoinGeckoAPI
 from google.cloud import pubsub_v1
@@ -13,11 +14,6 @@ from googleapiclient.errors import HttpError
 # Custom modules
 from configs.configs import GECKO_SECRET_URI, PUB_SUB_SA_SECRET_URI, PROJECT_ID, TOPIC_ID
 
-
-import logging
-import sys
-
-# Add this to see output in your VM terminal
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -98,14 +94,16 @@ def publish_tester() -> None:
 def publisher_production_runner() -> None:
     while True: 
         logging.info("Publishing to pub/sub topic.")
-        pub_sub_publisher()
-    
+        try:
+            logging.info("Publishing to pub/sub topic.")
+            pub_sub_publisher()
+        except Exception as e:
+            logging.error("Error during publish cycle: %s", e)
+            time.sleep(10)  # Backoff before retry    
 if __name__ == "__main__":
-   # Production runs:
    publisher_production_runner()
   
-  # Test runs: 
-   #publish_tester()
+  
 
     
     

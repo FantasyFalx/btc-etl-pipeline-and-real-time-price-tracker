@@ -3,28 +3,30 @@
 # Basic Configs
 variable "project_id" {
   type = string
-  description = "value"
-  default = "value"
+  description = "The GCP project ID where resources will be created"
+  
+  validation {
+    condition     = length(var.project_id) > 0
+    error_message = "project_id must not be empty"
+  }
 }
 
 variable "region" {
   type = string
-  description = "value"
-  default = "value"
+  description = "The GCP region for regional resources"
+  default     = "us-central1"
 }
 
 # Pub/Sub 
 variable pubsub_sa_id {
   type = string
   description = "Pub/Sub Service Account ID"
-  default = "value"
 }
 
 
 variable pubsub_sa_display_name {
   type = string
   description = "Pub/Sub Service Account Display Name"
-  default = "value"
 }
 
 
@@ -32,13 +34,11 @@ variable pubsub_sa_display_name {
 variable dataflow_sa_id {
   type = string
   description = "Dataflow Service Account ID"
-  default = "value"
 }
 
 variable dataflow_sa_display_name {
   type = string
   description = "Dataflow Service Account Display Name"
-  default = "value"
 }
 
 # Big Query
@@ -46,20 +46,17 @@ variable dataflow_sa_display_name {
 variable bigquery_sa_id {
   type = string
   description = "Big Query Service Account ID"
-  default = "value"
 }
 
 variable bigquery_sa_display_name {
   type = string
   description = "Big Query Service Account Display Name"
-  default = "value"
 }
 
 # Cloud Storage 
 variable gcs_sa_id {
   type = string
   description = "Cloud Storage Service Account ID"
-  default = "value"
 }
 
 variable gcs_sa_display_name {
@@ -73,26 +70,22 @@ variable gcs_sa_display_name {
 variable secret_manager_sa_id {
   type = string
   description = "Service account secret id"
-  default = "value"
 }
 
 variable secret_manager_sa_display_name {
   type = string
   description = "Service account display name"
-  default = "value"
 }
 
 # Artifact registry
 variable "pub_sub_repo_id" {
   type = string
   description = "Pub/Sub artifact registry repository id"
-  default = "value"
 }
 
 variable "dashboard_repo_id" {
   type = string
   description = "Dashboard artifact registry repository id"
-  default = "value"
 }
 
 ############################################################
