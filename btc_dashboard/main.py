@@ -51,7 +51,7 @@ placeholder_2 = st.empty()
 placeholder_3 = st.empty()
 placeholder_4 = st.empty()
 
-@st.fragment("run_every", ttl=120)
+@st.fragment(run_every=120)
 def main():
     
      

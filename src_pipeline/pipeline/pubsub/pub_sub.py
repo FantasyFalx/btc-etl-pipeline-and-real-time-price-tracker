@@ -93,7 +93,6 @@ def publish_tester() -> None:
      
 def publisher_production_runner() -> None:
     while True: 
-        logging.info("Publishing to pub/sub topic.")
         try:
             logging.info("Publishing to pub/sub topic.")
             pub_sub_publisher()
