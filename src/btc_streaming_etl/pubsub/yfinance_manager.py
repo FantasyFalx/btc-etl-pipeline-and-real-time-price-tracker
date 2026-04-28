@@ -1,0 +1,44 @@
+# Standard libraries
+from urllib.error import HTTPError
+import logging
+from websockets.exceptions import ConnectionClosed
+# 3rd party
+import yfinance as yf
+# Custom modules
+
+logging.basicConfig(level=logging.INFO)
+
+
+class YFinanceManager:
+    def __init__(self):
+        self.socket: yf.WebSocket | None = None
+        self.ticker: str = None
+
+    def run_socket(self) -> str:
+        try:
+            self.set_socket()
+            socket = self.socket
+            socket.subscribe(self.ticker)
+            socket.listen(self.message_handler)  # this is the callback function that returns the messages.
+        except ValueError as e:
+            logging.error(f"Value error: {e}. Ticker cannot be None.")
+            raise e 
+        except TypeError as e:
+            logging.error(f"Type error: {e}. Invalid type for ticker.")
+            raise e
+        except ConnectionClosed as e:
+            logging.error(f"Socket connection closed: {e}")
+            raise e
+    
+    def set_socket(self) -> None:
+        self.socket = yf.WebSocket()
+    
+    def set_ticker(self, ticker: str) -> None:
+        self.ticker = ticker
+
+    def message_handler(self, message: str) -> str:
+        return message        
+
+if __name__ == "__main__":
+    None
+
