@@ -10,7 +10,9 @@ from urllib.error import HTTPError
 from websockets.exceptions import ConnectionClosed
 # Custom modules
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
-
+from btc_streaming_etl.pubsub.data_validator import DataValidator
+from pydantic import ValidationError 
+from pydantic_core import PydanticCustomError, InitErrorDetails
 # Constants
 
 # Fixtures
@@ -26,9 +28,7 @@ def mock_socket(mocker):
 def mock_ticker():
     return "BTC-USD"
 
-@pytest.fixture
-def mock_handler_message():
-    return "{'type': 'message', 'data': 'test'}"
+
 
 @pytest.fixture
 def mock_closed_connection(
@@ -36,7 +36,6 @@ def mock_closed_connection(
 ):
     mocker.patch(
         "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket", 
-        # Always return the actual exception, not a mock object. 
         side_effect = ConnectionClosed(
             None, 
             None
@@ -73,7 +72,6 @@ def mock_yfinance_set_socket(mocker, mock_socket, yfinance_manager_factory):
     )
     return yfinance_manager_factory
 
-# Set a fixture that mocks the subscribe and listen methods. 
 @pytest.fixture 
 def mock_yfinance_successful_run_socket(
     mocker, mock_socket, 
@@ -88,6 +86,27 @@ def mock_yfinance_successful_run_socket(
     return yfinance_manager_factory
 
 
+@pytest.fixture
+def mock_schema_validator_failure(mocker, yfinance_manager_factory):
+    mocker.patch(
+        "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+        return_value=False,
+    )
+    return yfinance_manager_factory
+
+@pytest.fixture
+def mock_schema_validator_success(mocker, yfinance_manager_factory):
+    mocker.patch(
+        "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+        return_value=True
+    )
+    return yfinance_manager_factory
 
 
-
+@pytest.fixture
+def mock_failed_handler(mocker, yfinance_manager_factory):
+    mocker.patch(
+        "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+        return_value=False
+    )
+    return yfinance_manager_factory

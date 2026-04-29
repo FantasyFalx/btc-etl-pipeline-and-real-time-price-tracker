@@ -2,6 +2,7 @@
 from urllib.error import HTTPError
 import logging
 from websockets.exceptions import ConnectionClosed
+from collections import deque
 # 3rd party
 import yfinance as yf
 # Custom modules
@@ -14,7 +15,9 @@ class YFinanceManager:
     def __init__(self):
         self.socket: yf.WebSocket | None = None
         self.ticker: str = None
+        self.message_queue: deque = deque[dict]()
 
+    
     def run_socket(self) -> str:
         try:
             self.set_socket()
@@ -37,8 +40,16 @@ class YFinanceManager:
     def set_ticker(self, ticker: str) -> None:
         self.ticker = ticker
 
-    def message_handler(self, message: str) -> str:
-        return message
+    def message_handler(self, message: dict) -> dict | None:
+        if self.is_valid_message(message):
+            logging.info(f"Valid message: {message}")
+            return message
+        return None
+        
+
+    def is_valid_message(self, message: dict) -> bool:
+        validator = DataValidator()
+        return validator.validate_message(message)
     
 
 if __name__ == "__main__":

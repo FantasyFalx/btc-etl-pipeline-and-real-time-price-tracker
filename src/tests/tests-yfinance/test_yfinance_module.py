@@ -1,5 +1,4 @@
 ## Standard libraries
-from urllib.error import HTTPError
 from websockets.exceptions import ConnectionClosed
 
 # 3rd party
@@ -23,10 +22,23 @@ def test_set_socket_success(mock_yfinance_set_socket, mock_socket):
     manager.set_socket()
     assert manager.socket == mock_socket
 
-def test_handler(mock_handler_message, yfinance_manager_factory):
-    manager = yfinance_manager_factory
-    message = manager.message_handler(mock_handler_message)
-    assert message == mock_handler_message
+def test_schema_validator_success(mock_schema_validator_success):
+    manager = mock_schema_validator_success
+    assert manager.is_valid_message(VALID_YFINANCE_BTC_MESSAGE) is True
+
+def test_schema_validator_failure(mock_schema_validator_failure):
+    manager = mock_schema_validator_failure
+    assert manager.is_valid_message(INVALID_YFINANCE_BTC_MESSAGE) is False
+
+def test_successful_handler(mock_schema_validator_success):
+    manager = mock_schema_validator_success
+    message = manager.message_handler(VALID_YFINANCE_BTC_MESSAGE)
+    assert message == VALID_YFINANCE_BTC_MESSAGE
+
+def test_failed_handler(mock_schema_validator_failure):
+    manager = mock_schema_validator_failure
+    message = manager.message_handler(INVALID_YFINANCE_BTC_MESSAGE)
+    assert message is None
 
 def test_socket_failure(mock_closed_connection):
     manager = mock_closed_connection
@@ -50,6 +62,3 @@ def test_yfinance_successful_run_socket(mock_yfinance_successful_run_socket):
     manager.socket.subscribe.assert_called_once_with(TEST_TICKER)
     manager.socket.listen.assert_called_once_with(manager.message_handler)
 
-def test_schema_validator_success(yfinance_manager_factory):
-    manager = yfinance_manager_factory
-    assert manager.schema_validator(VALID_YFINANCE_BTC_MESSAGE) is True

@@ -1,5 +1,7 @@
 # ₿ Real-Time Bitcoin Streaming ETL Project ₿
 
+
+
 ## 📖 Overview
 This project implements a scalable, real-time streaming ETL (Extract, Transform, Load) pipeline for Bitcoin cryptocurrency data on Google Cloud Platform (GCP). It ingests live price data from the CoinGecko API, processes and aggregates it using Apache Beam on Google Cloud Dataflow, stores the results in BigQuery, and visualizes key metrics on a [live Streamlit dashboard](https://btc-dashboard-app-862053225903.us-central1.run.app/).
 
