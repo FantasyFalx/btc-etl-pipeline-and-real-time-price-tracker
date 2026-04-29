@@ -4,3 +4,4 @@ python-dotenv
 yfinance
 pytest
 pytest-mock
+pydantic

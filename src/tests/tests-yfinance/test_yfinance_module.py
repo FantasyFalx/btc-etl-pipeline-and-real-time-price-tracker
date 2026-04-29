@@ -6,10 +6,13 @@ from websockets.exceptions import ConnectionClosed
 import pytest
 
 # Custom modules
-from constants import TEST_TICKER
+from constants import (
+    TEST_TICKER,
+    VALID_YFINANCE_BTC_MESSAGE,
+    INVALID_YFINANCE_BTC_MESSAGE,
+)
 
 # Functions
-
 def test_set_ticker_success(mock_ticker, yfinance_manager_factory):
     manager = yfinance_manager_factory
     manager.set_ticker(mock_ticker)
@@ -39,3 +42,14 @@ def test_invalid_ticker_error(mock_invalid_ticker_error):
     manager = mock_invalid_ticker_error
     with pytest.raises(ValueError):
         manager.run_socket()
+
+def test_yfinance_successful_run_socket(mock_yfinance_successful_run_socket):
+    manager = mock_yfinance_successful_run_socket
+    manager.set_ticker(TEST_TICKER)
+    manager.run_socket()
+    manager.socket.subscribe.assert_called_once_with(TEST_TICKER)
+    manager.socket.listen.assert_called_once_with(manager.message_handler)
+
+def test_schema_validator_success(yfinance_manager_factory):
+    manager = yfinance_manager_factory
+    assert manager.schema_validator(VALID_YFINANCE_BTC_MESSAGE) is True

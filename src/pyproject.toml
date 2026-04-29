@@ -10,10 +10,10 @@ dependencies = [
     "python-dotenv",
     "yfinance",
     "pytest",
-    "pytest-mock"
+    "pytest-mock",
+    "pydantic"
 
 ]
-
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

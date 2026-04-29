@@ -5,9 +5,10 @@ from websockets.exceptions import ConnectionClosed
 # 3rd party
 import yfinance as yf
 # Custom modules
+from btc_streaming_etl.pubsub.data_validator import DataValidator
+
 
 logging.basicConfig(level=logging.INFO)
-
 
 class YFinanceManager:
     def __init__(self):
@@ -37,8 +38,13 @@ class YFinanceManager:
         self.ticker = ticker
 
     def message_handler(self, message: str) -> str:
-        return message        
+        return message
+    
 
 if __name__ == "__main__":
+    btc_manager = YFinanceManager()
+    btc_manager.set_ticker("BTC-USD")
+    btc_manager.run_socket()
+else:
     None
 

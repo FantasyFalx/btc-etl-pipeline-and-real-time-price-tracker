@@ -73,6 +73,20 @@ def mock_yfinance_set_socket(mocker, mock_socket, yfinance_manager_factory):
     )
     return yfinance_manager_factory
 
+# Set a fixture that mocks the subscribe and listen methods. 
+@pytest.fixture 
+def mock_yfinance_successful_run_socket(
+    mocker, mock_socket, 
+    yfinance_manager_factory
+):
+    mocker.patch(
+        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket",
+        return_value=mock_socket
+    )
+    mock_socket.subscribe.return_value = True
+    mock_socket.listen.return_value = True
+    return yfinance_manager_factory
+
 
 
 

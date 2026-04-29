@@ -10,3 +10,4 @@ Requires-Dist: python-dotenv
 Requires-Dist: yfinance
 Requires-Dist: pytest
 Requires-Dist: pytest-mock
+Requires-Dist: pydantic
