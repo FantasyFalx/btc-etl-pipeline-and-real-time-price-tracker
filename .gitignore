@@ -1,18 +1,67 @@
-# Ignore everything
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+pip-wheel-metadata/
+*.manifest
+*.spec
 
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
 
+# Virtual environments
+.env
+.env.*
+.venv/
+venv/
+ENV/
 
-# Un-ignore specific files and directories
-!.gitignore
-!README.md
-!flowchart.png
-
-# Un-ignore directories that might contain .py files
-client_secrets.json
-deployment.sh
-project_plan.txt
+# IDE / editor
 .vscode/
 .cursor/
-custom_dags/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets & credentials
+client_secrets.json
+*.pem
+*.key
+btc_dashboard/.streamlit/secrets.toml
+btc_dashboard/configs/*.json
+src/btc_streaming_etl/gcloud_credentials/*.json
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Project-specific
+deployment.sh
+project_plan.txt
+flowchart.png
 plans/
-src_pipeline/
+terraform_gcp_resources/
