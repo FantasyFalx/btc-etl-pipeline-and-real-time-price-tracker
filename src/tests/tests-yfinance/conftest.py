@@ -9,8 +9,6 @@ import pytest
 from websockets.exceptions import ConnectionClosed
 # Custom modules
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
-# Constants
-from constants import VALID_YFINANCE_BTC_MESSAGE, INVALID_YFINANCE_BTC_MESSAGE
 # Fixtures
 @pytest.fixture
 def yfinance_manager_factory():
@@ -102,32 +100,5 @@ def mock_failed_handler(mocker, yfinance_manager_factory):
     mocker.patch(
         "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
         return_value=False
-    )
-    return yfinance_manager_factory
-
-## Queue Fixtures 
-
-def fake_listen_success(callback):
-    callback(VALID_YFINANCE_BTC_MESSAGE)
-    return True
-
-@pytest.fixture
-def mock_yfinance_message_queue_success(mocker, yfinance_manager_factory):
-    mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.listen", 
-        side_effect=fake_listen_success
-    )
-    return yfinance_manager_factory
-
-
-def fake_listen_empty(callback):
-    callback(None)
-    return True
-
-@pytest.fixture
-def mock_yfinance_message_queue_empty(mocker, yfinance_manager_factory):
-    mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.listen", 
-        side_effect=fake_listen_empty
     )
     return yfinance_manager_factory

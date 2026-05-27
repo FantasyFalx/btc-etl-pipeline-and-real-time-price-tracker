@@ -1,12 +1,11 @@
 # Standard libraries
 import logging
 from websockets.exceptions import ConnectionClosed
-from collections import deque
-import threading 
 # 3rd party
 import yfinance as yf
 # Custom modules
 from btc_streaming_etl.pubsub.data_validator import DataValidator
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -15,14 +14,13 @@ class YFinanceManager:
     def __init__(self):
         self.socket: yf.WebSocket | None = None
         self.ticker: str = None
-        self.message_queue: deque = deque[dict](maxlen=1000)
-        self.socket_thread: threading.Thread = None
         self.thread_running: bool = None
     
 
     def get_message(self) -> dict | None:
         try:
             message = self.message_queue.popleft()
+            print("I got the message.")
             return message
         except IndexError:
             return None
@@ -34,12 +32,7 @@ class YFinanceManager:
 
             socket = self.socket
             socket.subscribe(self.ticker)
-            # Thread to run listn in the background. 
-            threading.Thread(
-                target=socket.listen, 
-                args=(self.message_handler,),
-                daemon=True
-            ).start() # Callback to update queue. 
+            socket.list(self.message_handler)
         except ValueError as e:
             logging.error(f"Value error: {e}. Ticker cannot be None.")
             raise e 
@@ -57,6 +50,10 @@ class YFinanceManager:
     def set_ticker(self, ticker: str) -> None:
         self.ticker = ticker
 
+    
+    # Redo these functions since I have added a threading class. 
+    # The handler will return the message if its valid. 
+    # Not add it to a queue. 
     def message_handler(self, message: dict) -> None:
         if self.is_valid_message(message):
             self.message_queue.append(message)

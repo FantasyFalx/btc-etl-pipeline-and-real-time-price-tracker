@@ -42,6 +42,8 @@ def test_invalid_ticker_error(mock_invalid_ticker_error):
         manager.set_ticker(TEST_TICKER)
         manager.run_socket()
 
+### TODO: Refactor these tests ###
+
 def test_successful_handler(mock_schema_validator_success):
     manager = mock_schema_validator_success
     manager.message_handler(VALID_YFINANCE_BTC_MESSAGE) # Updates the queue
@@ -67,18 +69,4 @@ def test_yfinance_successful_run_socket(mock_yfinance_successful_run_socket):
     manager.socket.subscribe.assert_called_once_with(TEST_TICKER)
     manager.socket.listen.assert_called_once_with(manager.message_handler)
 
-def test_yfinance_get_message_queue(mock_yfinance_message_queue_success):
-    manager = mock_yfinance_message_queue_success
-    manager.set_ticker(TEST_TICKER)
-    manager.run_socket()
-    message = manager.get_message()
-    assert message == VALID_YFINANCE_BTC_MESSAGE
-
-def test_yfinance_get_message_queue_empty(mock_yfinance_message_queue_empty):
-    manager = mock_yfinance_message_queue_empty
-    manager.set_ticker(TEST_TICKER)
-    manager.run_socket()
-    message = manager.get_message()
-    assert message is None # Queue is empty.
-
-
+###########################################################
