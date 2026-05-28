@@ -16,14 +16,15 @@ logging.basicConfig(level=logging.INFO)
 # Why add unnecessary complexity?
 ## Thread manager will be run in the yfinance manager.
  
+# Set types later for the objects. 
 
 class ThreadManager:
-    def __init__(self, queue: Queue):
+    def __init__(self, producer_object, consumer_object):
         self.thread: threading.Thread | None = None
         self.thread_running: bool = False
-        # Message queue should live in the thread manager or the finance manager? 
-        # I have to decide on this? 
-        self.message_queue: Queue = queue
+        self.message_queue: Queue = Queue(maxsize=1000)
+        self.producer_object = producer_object
+        self.consumer_object = consumer_object
 
     """
     Components:
@@ -45,7 +46,7 @@ class ThreadManager:
     
     """
 
-    def execute_thread(self, ) -> None:
+    def execute_threads(self) -> None:
         # Main method to execute the workflow. 
         # Set two exectuors in a thread pool with the context manager. 
             # Run the producer 
@@ -53,15 +54,15 @@ class ThreadManager:
 
         # Determine a condition to set the event. 
         # A solid condition for the event to be set
-        
-
         return None    
 
-    def producer(self, message_queue: Queue, event: threading.Event) -> None:
-        # This will be for the yfinance manager. 
-        # Create the yahoo finance manager. 
-        # Run the web socket. 
-        return None
+    def producer(self, queue: Queue, event: threading.Event) -> None:
+        while not event.is_set():
+            message = self.producer_object()
+            print(f"Producer message: {message}")
+            queue.put(message)
+            print(f"Size of queue: {queue.qsize()}")
+   
 
     def consumer(self, message_queue: Queue, event: threading.Event) -> None:
         # This will be for the pub/sub topic. 
