@@ -1,7 +1,9 @@
 # IMPORT STANDARD LIBRARIES
 import threading
-from queue import Queue
+from queue import Queue, Empty
 import logging
+import concurrent.futures
+import time
 
 # IMPORT 3RD PARTY LIBRARIES
 
@@ -22,7 +24,10 @@ class ThreadManager:
     def __init__(self, producer_object, consumer_object):
         self.thread: threading.Thread | None = None
         self.thread_running: bool = False
+        self.event: threading.Event = threading.Event()
         self.message_queue: Queue = Queue(maxsize=1000)
+        self.SENTINEL = None
+        # These will be callables for the producer and consumer. 
         self.producer_object = producer_object
         self.consumer_object = consumer_object
 
@@ -47,29 +52,59 @@ class ThreadManager:
     """
 
     def execute_threads(self) -> None:
-        # Main method to execute the workflow. 
-        # Set two exectuors in a thread pool with the context manager. 
-            # Run the producer 
-            # Run the consumer
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future_producer = executor.submit(
+                self.producer, 
+                self.message_queue, 
+                self.event
+            )
+            
+            future_consumer = executor.submit(
+                self.consumer, 
+                self.message_queue, 
+                self.event
+            )
+            
+            
+            concurrent.futures.wait(
+                [future_producer, future_consumer], 
+                #timeout=5,
+                return_when=concurrent.futures.ALL_COMPLETED
+            )
 
-        # Determine a condition to set the event. 
-        # A solid condition for the event to be set
-        return None    
+    # concurrent.futures.wait waits for the producer and consumer callables to finish (which in this case are not threads or futures, so this may be a bug)
 
+    # Review explanation and fix the logic later.        
     def producer(self, queue: Queue, event: threading.Event) -> None:
+        
         while not event.is_set():
-            message = self.producer_object()
-            print(f"Producer message: {message}")
-            queue.put(message)
-            print(f"Size of queue: {queue.qsize()}")
+            try: 
+                message = self.producer_object()
+                queue.put(message)
+                print(queue.qsize())
+            except Exception as e:
+                event.set()
+                queue.put(self.SENTINEL)
+                logging.error(f"Error in producer: {e}")
+            
    
-
-    def consumer(self, message_queue: Queue, event: threading.Event) -> None:
-        # This will be for the pub/sub topic. 
-        # Keep consumer one while the event is not set or queue is not empty. 
-            # Pop the message from the queue. 
-            # Push the messasge and send to the pub/sub topic. 
-        return None
+    ## Fix the logic later. 
+    def consumer(self, queue: Queue, event: threading.Event) -> None:
+        while not event.is_set() or not queue.empty():
+            try:
+                message = queue.get(timeout=0.1)
+                self.consumer_object(message)
+            except Empty: 
+                continue
+            
+            if message is self.SENTINEL:
+                break
+            
+           
+           
+   
+        
 
 
     

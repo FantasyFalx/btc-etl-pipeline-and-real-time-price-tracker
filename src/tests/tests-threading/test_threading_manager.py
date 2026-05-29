@@ -48,11 +48,27 @@ def test_producer(thread_manager_factory, producer_callable, consumer_callable):
 
 
 ## TODO: Add tests for consumer and execute_threads later.
-#def test_consumer(thread_manager_factory):
-#    manager = thread_manager_factory
-#    pass
+# Test that checks if the consumer is able to consume and drain the queue. 
+def test_consumer(thread_manager_factory, producer_callable, consumer_callable):
+    manager = thread_manager_factory(producer_callable, consumer_callable) 
+    event = threading.Event()
+    queue = manager.message_queue
+    sample_size = 10
+
+    # Add items to the queue
+    for msg in range(sample_size):
+        queue.put(f"msg_{msg}")
+
+    # Give consumer time to start
+    event.set()
+    manager.consumer(queue, event)
+
+    assert queue.qsize() == 0
+    
 #
-#
-#def test_execute_threads(thread_manager_factory):
-#    manager = thread_manager_factory
-#    pass
+def test_execute_threads(thread_manager_factory, producer_callable_raises, consumer_callable):
+    manager = thread_manager_factory(producer_callable_raises, consumer_callable)
+    manager.execute_threads()
+    # This hangs because event is not set in the manager. 
+    manager.event.set()
+    assert manager.message_queue.qsize() == 0 and manager.event.is_set()
