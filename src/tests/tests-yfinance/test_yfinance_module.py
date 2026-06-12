@@ -8,7 +8,7 @@ import pytest
 from constants import (
     TEST_TICKER,
     VALID_YFINANCE_BTC_MESSAGE,
-    INVALID_YFINANCE_BTC_MESSAGE,
+    INVALID_YFINANCE_BTC_MESSAGE
 )
 
 def test_set_ticker_success(mock_ticker, yfinance_manager_factory):
@@ -46,15 +46,13 @@ def test_invalid_ticker_error(mock_invalid_ticker_error):
 
 def test_successful_handler(mock_schema_validator_success):
     manager = mock_schema_validator_success
-    manager.message_handler(VALID_YFINANCE_BTC_MESSAGE) # Updates the queue
-    queue_value = manager.message_queue.popleft()
-    assert queue_value == VALID_YFINANCE_BTC_MESSAGE
+    result = manager.message_handler(VALID_YFINANCE_BTC_MESSAGE)
+    assert result == VALID_YFINANCE_BTC_MESSAGE
 
 def test_failed_handler(mock_schema_validator_failure):
     manager = mock_schema_validator_failure
-    manager.message_handler(INVALID_YFINANCE_BTC_MESSAGE) # Updates the queue
-    queue_size = len(manager.message_queue) # Hallucination wtf. 
-    assert queue_size == 0 # Queue is empty.
+    result = manager.message_handler(INVALID_YFINANCE_BTC_MESSAGE)
+    assert result is None
 
 def test_socket_failure(mock_closed_connection):
     manager = mock_closed_connection

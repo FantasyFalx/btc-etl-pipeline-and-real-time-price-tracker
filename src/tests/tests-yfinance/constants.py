@@ -6,7 +6,7 @@
 TEST_TICKER = "BTC-USD"
 
 VALID_YFINANCE_BTC_MESSAGE = {
-    "id": "BTC-USD",
+    "id": TEST_TICKER,
     "price": 75751.76,
     "time": "1777478204000",
     "currency": "USD",

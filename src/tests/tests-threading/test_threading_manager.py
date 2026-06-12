@@ -3,10 +3,9 @@ import threading
 import time
 
 # 3rd party
-import pytest
 
 # Custom modules
-# from constants import
+from constants import VALID_YFINANCE_BTC_MESSAGE, INVALID_YFINANCE_BTC_MESSAGE
 
 
     
@@ -22,6 +21,7 @@ def test_producer(thread_manager_factory, producer_callable, consumer_callable):
     message_queue = manager.message_queue
     
     # Start producer in a thread
+    # Inserts items into the thread. 
     producer_thread = threading.Thread(
         target=manager.producer, args=(message_queue, event)
     )
@@ -64,11 +64,27 @@ def test_consumer(thread_manager_factory, producer_callable, consumer_callable):
     manager.consumer(queue, event)
 
     assert queue.qsize() == 0
-    
-#
+
+
 def test_execute_threads(thread_manager_factory, producer_callable_raises, consumer_callable):
     manager = thread_manager_factory(producer_callable_raises, consumer_callable)
     manager.execute_threads()
     # This hangs because event is not set in the manager. 
     manager.event.set()
     assert manager.message_queue.qsize() == 0 and manager.event.is_set()
+
+
+def test_queue_gluer_puts_valid_message(
+    thread_manager_factory, producer_callable, consumer_callable
+):
+    manager = thread_manager_factory(producer_callable, consumer_callable)
+    manager.queue_gluer(VALID_YFINANCE_BTC_MESSAGE)
+    assert manager.message_queue.get() == VALID_YFINANCE_BTC_MESSAGE
+
+
+def test_queue_gluer_skips_invalid_message(
+    thread_manager_factory, producer_callable, consumer_callable
+):
+    manager = thread_manager_factory(producer_callable, consumer_callable)
+    manager.queue_gluer(INVALID_YFINANCE_BTC_MESSAGE)
+    assert manager.message_queue.qsize() == 0

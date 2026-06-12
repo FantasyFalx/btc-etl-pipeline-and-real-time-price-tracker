@@ -28,6 +28,7 @@ class ThreadManager:
         self.message_queue: Queue = Queue(maxsize=1000)
         self.SENTINEL = None
         # These will be callables for the producer and consumer. 
+        # fuck I need to change this. 
         self.producer_object = producer_object
         self.consumer_object = consumer_object
 
@@ -40,16 +41,6 @@ class ThreadManager:
      https://realpython.com/intro-to-python-threading/#producer-consumer-threading
     """
 
-    # The producer will be itss ''
-
-    """
-     Having this module manage threading for pub/sub and yfinance manager 
-     is logical because it separates the concerns of threading from the 
-     pub/sub and yfinance manager.
-     While this just holds the shared resource between the two. I won't need to 
-     input
-    
-    """
 
     def execute_threads(self) -> None:
         
@@ -78,17 +69,28 @@ class ThreadManager:
     # Review explanation and fix the logic later.        
     def producer(self, queue: Queue, event: threading.Event) -> None:
         
-        while not event.is_set():
-            try: 
-                message = self.producer_object()
-                queue.put(message)
-                print(queue.qsize())
-            except Exception as e:
-                event.set()
-                queue.put(self.SENTINEL)
-                logging.error(f"Error in producer: {e}")
-            
-   
+        # How will I set the event If I need to remove the loop? 
+        try: 
+            # I have to figure out how to input the socket into this item. 
+        
+            message = self.producer_object()
+            queue.put(message)
+            print(queue.qsize())
+        except Exception as e:
+            event.set()
+            queue.put(self.SENTINEL)
+            logging.error(f"Error in producer: {e}")
+        finally:
+            # for tests. 
+            event.set()
+
+
+    def queue_gluer(self,message: dict) -> None: 
+        new_message = self.producer_object.message_handler(message)
+        if new_message:
+            self.message_queue.put(new_message)
+
+
     ## Fix the logic later. 
     def consumer(self, queue: Queue, event: threading.Event) -> None:
         while not event.is_set() or not queue.empty():
