@@ -7,18 +7,15 @@ import time
 # Custom modules
 from constants import VALID_YFINANCE_BTC_MESSAGE, INVALID_YFINANCE_BTC_MESSAGE
 
-
-    
-# I am going to need to model a message call for the producer test. 
-# Seems like this calls for a fixture. 
-
-
 def test_producer(thread_manager_factory, producer_callable, consumer_callable):
     manager = thread_manager_factory(producer_callable, consumer_callable)
     
     # Configs
     event = threading.Event()
     message_queue = manager.message_queue
+
+    for message in range(4):
+        message_queue.put(f"message_{message}")
     
     # Start producer in a thread
     # Inserts items into the thread. 
@@ -55,36 +52,34 @@ def test_consumer(thread_manager_factory, producer_callable, consumer_callable):
     queue = manager.message_queue
     sample_size = 10
 
-    # Add items to the queue
     for msg in range(sample_size):
         queue.put(f"msg_{msg}")
 
-    # Give consumer time to start
+    
     event.set()
     manager.consumer(queue, event)
-
     assert queue.qsize() == 0
 
 
 def test_execute_threads(thread_manager_factory, producer_callable_raises, consumer_callable):
     manager = thread_manager_factory(producer_callable_raises, consumer_callable)
     manager.execute_threads()
-    # This hangs because event is not set in the manager. 
     manager.event.set()
     assert manager.message_queue.qsize() == 0 and manager.event.is_set()
 
 
 def test_queue_gluer_puts_valid_message(
-    thread_manager_factory, producer_callable, consumer_callable
+    thread_manager_factory, yfinance_manager_factory, consumer_callable
 ):
-    manager = thread_manager_factory(producer_callable, consumer_callable)
+    manager = thread_manager_factory(yfinance_manager_factory, consumer_callable)
     manager.queue_gluer(VALID_YFINANCE_BTC_MESSAGE)
     assert manager.message_queue.get() == VALID_YFINANCE_BTC_MESSAGE
 
 
 def test_queue_gluer_skips_invalid_message(
-    thread_manager_factory, producer_callable, consumer_callable
+    thread_manager_factory, yfinance_manager_factory, consumer_callable
 ):
-    manager = thread_manager_factory(producer_callable, consumer_callable)
+    
+    manager = thread_manager_factory(yfinance_manager_factory, consumer_callable)
     manager.queue_gluer(INVALID_YFINANCE_BTC_MESSAGE)
     assert manager.message_queue.qsize() == 0

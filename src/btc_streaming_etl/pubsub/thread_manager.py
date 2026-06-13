@@ -21,14 +21,13 @@ logging.basicConfig(level=logging.INFO)
 # Set types later for the objects. 
 
 class ThreadManager:
-    def __init__(self, producer_object, consumer_object):
+    def __init__(self, producer_object: YFinanceManager, consumer_object: callable):
         self.thread: threading.Thread | None = None
         self.thread_running: bool = False
         self.event: threading.Event = threading.Event()
         self.message_queue: Queue = Queue(maxsize=1000)
         self.SENTINEL = None
-        # These will be callables for the producer and consumer. 
-        # fuck I need to change this. 
+        # The produce needs to be changed to a yfinance manager. 
         self.producer_object = producer_object
         self.consumer_object = consumer_object
 
@@ -64,15 +63,11 @@ class ThreadManager:
                 return_when=concurrent.futures.ALL_COMPLETED
             )
 
-    # concurrent.futures.wait waits for the producer and consumer callables to finish (which in this case are not threads or futures, so this may be a bug)
 
-    # Review explanation and fix the logic later.        
     def producer(self, queue: Queue, event: threading.Event) -> None:
         
-        # How will I set the event If I need to remove the loop? 
-        try: 
-            # I have to figure out how to input the socket into this item. 
-        
+        try:
+
             message = self.producer_object()
             queue.put(message)
             print(queue.qsize())

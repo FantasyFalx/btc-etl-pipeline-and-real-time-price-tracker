@@ -5,21 +5,26 @@ import pytest
 
 # Custom modules
 from btc_streaming_etl.pubsub.thread_manager import ThreadManager
+from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
 
 
 @pytest.fixture
-def thread_manager_factory():
-    return lambda producer, consumer: ThreadManager(producer, consumer)
+def yfinance_manager_factory():
+    return YFinanceManager()
 
+
+@pytest.fixture
+def thread_manager_factory(yfinance_manager_factory: YFinanceManager):
+    return lambda producer_object, consumer_object: ThreadManager(
+        producer_object=producer_object, 
+        consumer_object=consumer_object
+    )
 
 @pytest.fixture
 def producer_callable():
-    return lambda: {
-        "ticker": "BTC-USD",
-        "price": 100000,
-        "timestamp": "2026-05-28 12:00:00",
-    }
-
+    def _produce():
+        return {"ticker": "BTC-USD", "price": 50000}
+    return _produce
 
 # Fix these later. 
 @pytest.fixture

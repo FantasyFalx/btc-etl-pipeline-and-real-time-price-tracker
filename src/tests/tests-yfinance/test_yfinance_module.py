@@ -10,6 +10,7 @@ from constants import (
     VALID_YFINANCE_BTC_MESSAGE,
     INVALID_YFINANCE_BTC_MESSAGE
 )
+from conftest import mock_callable
 
 def test_set_ticker_success(mock_ticker, yfinance_manager_factory):
     manager = yfinance_manager_factory
@@ -40,7 +41,7 @@ def test_invalid_ticker_error(mock_invalid_ticker_error):
     manager = mock_invalid_ticker_error
     with pytest.raises(ValueError):
         manager.set_ticker(TEST_TICKER)
-        manager.run_socket()
+        manager.run_socket(mock_callable)
 
 ### TODO: Refactor these tests ###
 
@@ -58,13 +59,13 @@ def test_socket_failure(mock_closed_connection):
     manager = mock_closed_connection
     with pytest.raises(ConnectionClosed):
         manager.set_ticker(TEST_TICKER) # Ticker is required before socket starts.
-        manager.run_socket()
+        manager.run_socket(mock_callable)
 
 def test_yfinance_successful_run_socket(mock_yfinance_successful_run_socket):
     manager = mock_yfinance_successful_run_socket
     manager.set_ticker(TEST_TICKER)
-    manager.run_socket()
+    manager.run_socket(mock_callable)
     manager.socket.subscribe.assert_called_once_with(TEST_TICKER)
-    manager.socket.listen.assert_called_once_with(manager.message_handler)
+    manager.socket.listen.assert_called_once_with(mock_callable)
 
 ###########################################################

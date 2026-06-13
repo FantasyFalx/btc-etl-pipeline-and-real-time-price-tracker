@@ -17,12 +17,17 @@ class YFinanceManager:
         self.thread_running: bool = None
     
 
-    def run_socket(self) -> None:
+    def run_socket(self, handler: callable) -> None:
         try:
+
             self.set_socket()
             socket = self.socket
             socket.subscribe(self.ticker)
-            socket.listen(self.message_handler)
+            ## Idea ##
+            # - Socket run socket will take in a function to run. s
+            # When it listens it will call the function passed into the socket. 
+            socket.listen(handler)
+        
         except ValueError as e:
             logging.error(f"Value error: {e}. Ticker cannot be None.")
             raise e 
