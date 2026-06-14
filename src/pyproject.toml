@@ -1,0 +1,19 @@
+[project]
+name = "btc-streaming-etl-pipeline"
+version = "0.1.0"
+description = "A streaming service for BTC price data."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-cloud-pubsub",
+    "google-auth",
+    "python-dotenv",
+    "yfinance",
+    "pytest",
+    "pytest-mock",
+    "pydantic"
+
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -11,15 +11,19 @@ from google.cloud import pubsub_v1
 from google.cloud import secretmanager
 from google.oauth2 import service_account
 from googleapiclient.errors import HttpError
-# Custom modules
-from configs.configs import GECKO_SECRET_URI, PUB_SUB_SA_SECRET_URI, PROJECT_ID, TOPIC_ID
+from configs.configs import (
+    GECKO_SECRET_URI, 
+    PUB_SUB_SA_SECRET_URI, 
+    PROJECT_ID, 
+    TOPIC_ID
+)
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stdout)]
 )
-
+ 
 try:
     logging.info("Creating GCP secret manager client")
     secret_client = secretmanager.SecretManagerServiceClient()
@@ -38,20 +42,14 @@ except HttpError as e:
     
 
 def payload_creator() -> str:
-    """Creates a payload message for BTC utilizing coingecko API, to send BTC price data as a pub/sub message 
-    over GCP. 
-
-    Returns:
-        str: Returns a json object in a string format, so json object can be transferred as a pub/sub message. 
-    """
     try: 
     
-     
+        
         btc_price = coin_client.get_price(ids="bitcoin", vs_currencies="usd").get("bitcoin").get("usd")
         coin_data = coin_client.get_coin_by_id(id="bitcoin", vs_currencies="usd")
-
         btc_volume = coin_data.get("market_data").get("total_volume").get("usd")
         event_type = "GET"
+        
         event_time = str(datetime.now())
         event_date = datetime.strftime(datetime.now().date(), "%Y-%m-%d")
 
@@ -66,7 +64,9 @@ def payload_creator() -> str:
 
         payload_message = json.dumps(event_data)
     
+        
         return payload_message
+    
     except HTTPError as e:
         logging.error("HTTPError when fetching coin data: %s", e)
         logging.error("Error %s, has occurred. Coin Gecko api is denying your requests.", e)

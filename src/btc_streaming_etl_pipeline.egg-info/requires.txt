@@ -1,0 +1,7 @@
+google-cloud-pubsub
+google-auth
+python-dotenv
+yfinance
+pytest
+pytest-mock
+pydantic
