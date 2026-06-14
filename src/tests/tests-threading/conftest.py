@@ -8,8 +8,13 @@ from btc_streaming_etl.pubsub.thread_manager import ThreadManager
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
 
 
+
 @pytest.fixture
-def yfinance_manager_factory():
+def yfinance_manager_factory(mocker):
+    mocker.patch(
+        "btc_streaming_etl.pubsub.yfinance_manager.YFinanceManager.run_socket",
+        new=mocker.MagicMock()
+    )
     return YFinanceManager()
 
 

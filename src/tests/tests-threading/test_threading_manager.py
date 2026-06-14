@@ -7,8 +7,10 @@ import time
 # Custom modules
 from constants import VALID_YFINANCE_BTC_MESSAGE, INVALID_YFINANCE_BTC_MESSAGE
 
-def test_producer(thread_manager_factory, producer_callable, consumer_callable):
-    manager = thread_manager_factory(producer_callable, consumer_callable)
+def test_producer(
+    thread_manager_factory, yfinance_manager_factory, consumer_callable
+):
+    manager = thread_manager_factory(yfinance_manager_factory, consumer_callable)
     
     # Configs
     event = threading.Event()
@@ -55,14 +57,15 @@ def test_consumer(thread_manager_factory, producer_callable, consumer_callable):
     for msg in range(sample_size):
         queue.put(f"msg_{msg}")
 
-    
     event.set()
     manager.consumer(queue, event)
     assert queue.qsize() == 0
 
-
-def test_execute_threads(thread_manager_factory, producer_callable_raises, consumer_callable):
-    manager = thread_manager_factory(producer_callable_raises, consumer_callable)
+###
+def test_execute_threads(
+    thread_manager_factory, yfinance_manager_factory, consumer_callable
+):
+    manager = thread_manager_factory(yfinance_manager_factory, consumer_callable)
     manager.execute_threads()
     manager.event.set()
     assert manager.message_queue.qsize() == 0 and manager.event.is_set()
