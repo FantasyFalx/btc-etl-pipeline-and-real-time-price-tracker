@@ -11,6 +11,9 @@ btc_streaming_etl/gcloud_credentials/credentials.py
 btc_streaming_etl/pubsub/__init__.py
 btc_streaming_etl/pubsub/data_validator.py
 btc_streaming_etl/pubsub/pub_sub.py
+btc_streaming_etl/pubsub/pubsub_publisher.py
+btc_streaming_etl/pubsub/temp.py
+btc_streaming_etl/pubsub/thread_manager.py
 btc_streaming_etl/pubsub/yfinance_manager.py
 btc_streaming_etl/pubsub/configs/__init__.py
 btc_streaming_etl/pubsub/configs/configs.py
