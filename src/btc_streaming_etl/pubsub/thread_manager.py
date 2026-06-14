@@ -62,19 +62,13 @@ class ThreadManager:
     def producer(self, queue: Queue, event: threading.Event) -> None:
 
         try:
-            # message = self.producer_object()
-            # queue.put(message)
-            # print(queue.qsize())
-            ###
             self.producer_object.run_socket(self.queue_gluer)
-            ###
         except Exception as e:
             event.set()
             ### Puts a sentinel value into the queue to signal the consumer to stop.
             queue.put(self.SENTINEL)
             logging.error(f"Error in producer: {e}")
         finally:
-            # for tests.
             event.set()
 
     def queue_gluer(self, message: dict) -> None:
@@ -82,7 +76,7 @@ class ThreadManager:
         if new_message:
             self.message_queue.put(new_message)
 
-    ## Fix the logic later.
+    ## Fix the logic later. ##
     def consumer(self, queue: Queue, event: threading.Event) -> None:
         while not event.is_set() or not queue.empty():
             try:
@@ -90,6 +84,5 @@ class ThreadManager:
                 self.consumer_object(message)
             except Empty:
                 continue
-
-            if message is self.SENTINEL:
+            if message is self.SENTINEL: # Sentinel value to signal the consumer to stop.
                 break

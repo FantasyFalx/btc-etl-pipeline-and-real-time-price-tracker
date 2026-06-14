@@ -99,10 +99,6 @@ def pub_sub_publisher() -> None:
     logging.info("Published to topic %s", topic_path)
 
 
-def publish_tester() -> None:
-    for i in range(100):
-        print(f"Run: {i}")
-        pub_sub_publisher()
 
 
 def publisher_production_runner() -> None:
