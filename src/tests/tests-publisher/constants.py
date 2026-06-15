@@ -9,7 +9,14 @@
 ## Fixtures ##
 
 ## Mock Paths ##
-MOCK_PUBLISHER_CLIENT_PATH = "btc_streaming_etl.pubsub.pubsub_publisher.PubSubPublisher.set_publisher_client"
+MOCK_PATHS = {
+    "set_publisher_client": "btc_streaming_etl.pubsub.pubsub_publisher.pubsub_v1.PublisherClient",
+    "set_topic_path": "btc_streaming_etl.pubsub.pubsub_publisher.pubsub_v1.PublisherClient.",
+}
+
+MOCK_TOPIC_PATH = "projects/bitcoin-streaming-etl-project/topics/btc_price_topic"
+
+
 
 if __name__ == "__main__":
     None

@@ -83,12 +83,12 @@ def payload_creator() -> str:
         logging.error(
             "Blank data will only be present, until requests are accepted. by server."
         )
-        return json.dumps({})  # Return empty dict on API call failure
+        return json.dumps({})  
 
 
 def pub_sub_publisher() -> None:
     topic_path = pub_sub_client.topic_path(
-        PROJECT_ID,
+        PROJECT_ID, 
         TOPIC_ID,
     )
     payload = payload_creator()
