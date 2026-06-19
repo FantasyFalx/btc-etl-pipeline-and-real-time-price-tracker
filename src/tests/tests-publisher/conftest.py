@@ -6,8 +6,12 @@
 import pytest
 # Custom modules
 from btc_streaming_etl.pubsub.pubsub_publisher import PubSubPublisher
-from googleapiclient.errors import HttpError
-from constants import MOCK_PATHS, MOCK_TOPIC_PATH
+from google.api_core.exceptions import GoogleAPICallError
+from constants import (
+    MOCK_PATHS, 
+    MOCK_TOPIC_PATH, 
+    RESULT_STRING, 
+)
 # CUSTOM IMPORTS
 ##############
 
@@ -22,21 +26,21 @@ def publisher_factory_fixture(mocker):
 
     return PubSubPublisher()
 
-@pytest.fixture
-def mock_http_error(
-    mocker, publisher_factory_fixture
-):
-    # TAkes 3 gives 4? 
-    mocker.patch(
-        MOCK_PATHS["set_publisher_client"], 
-        side_effect = HttpError(
-            # Status code, reason, content, uri
-            # It needs a resonse object insted of an int.  
-            resp=mocker.MagicMock(status=400, reason="Bad Request"),
-            content=b"Bad Request",
-            uri="https://failed-to-set-publisher-client.com"
+def google_api_error_patch_returner(mocker, path):
+    return mocker.patch(
+        path, side_effect = GoogleAPICallError(
+            "Bad Request",
         )
     )
+
+@pytest.fixture
+def mock_google_api_error(
+    mocker, publisher_factory_fixture
+):
+    
+    for path in MOCK_PATHS:
+        google_api_error_patch_returner(mocker, MOCK_PATHS[path])
+    
     return publisher_factory_fixture
     
 @pytest.fixture
@@ -49,15 +53,29 @@ def mock_pub_sub_topic_path(
 
     return publisher_factory_fixture
 
-"""
-client = mocker.MagicMock()
-    client.topic_path.return_value = MOCK_TOPIC_PATH
-    publisher_factory_fixture._publisher_client = client
 
+@pytest.fixture
+def mock_publish_message(
+    mocker, publisher_factory_fixture
+):
+    mocker.patch(
+        MOCK_PATHS["publish_message"],
+        return_value=mocker.MagicMock()
+    )
     return publisher_factory_fixture
 
+@pytest.fixture
+def mock_publish_message_success(mocker, publisher_factory_fixture):
+    mocker.patch(
+        MOCK_PATHS["publish_message"],
+        return_value=mocker.MagicMock()
+    )
+    client = mocker.MagicMock()
+    # This set up is incorrect. 
+    publisher_factory_fixture._publisher_client = client
+    client.publish_message.return_value = RESULT_STRING
+    return publisher_factory_fixture
 
-"""
 
 if __name__ == "__main__":
     None
