@@ -6,6 +6,7 @@ import pytest
 # Custom modules
 from btc_streaming_etl.pubsub.thread_manager import ThreadManager
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
+from btc_streaming_etl.pubsub.pubsub_publisher import PubSubPublisher
 
 
 
@@ -17,9 +18,18 @@ def yfinance_manager_factory(mocker):
     )
     return YFinanceManager()
 
+@pytest.fixture
+def pubsub_publisher_factory(mocker):
+    mocker.patch(
+        "btc_streaming_etl.pubsub.pubsub_publisher.PubSubPublisher.publish_message",
+        new=mocker.MagicMock()
+    )
+    return PubSubPublisher()
+
+
 
 @pytest.fixture
-def thread_manager_factory(yfinance_manager_factory: YFinanceManager):
+def thread_manager_factory():
     return lambda producer_object, consumer_object: ThreadManager(
         producer_object=producer_object, 
         consumer_object=consumer_object

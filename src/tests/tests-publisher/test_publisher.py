@@ -6,7 +6,7 @@
 import pytest
 from google.api_core.exceptions import GoogleAPICallError
 # CUSTOM IMPORTS
-from constants import MOCK_TOPIC_PATH, MOCK_MESSAGE, RESULT_STRING
+from publisher_constants import MOCK_TOPIC_PATH, MOCK_MESSAGE, RESULT_STRING
 ##############
 
 ## Set client method ##
@@ -31,11 +31,15 @@ def test_set_topic_path_failure(mock_google_api_error):
     with pytest.raises(GoogleAPICallError):
         publisher.set_topic_path()
 
-
 def test_publish_message_success(mock_publish_message_success):
     publisher = mock_publish_message_success
     result = publisher.publish_message(MOCK_MESSAGE)
     assert result == RESULT_STRING
+
+def test_publish_message_failure(mock_google_api_error):
+    publisher = mock_google_api_error
+    with pytest.raises(GoogleAPICallError):
+        publisher.publish_message(MOCK_MESSAGE)
 
 
 if __name__ == "__main__":

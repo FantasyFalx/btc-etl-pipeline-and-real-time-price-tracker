@@ -102,7 +102,3 @@ def mock_failed_handler(mocker, yfinance_manager_factory):
         return_value=False
     )
     return yfinance_manager_factory
-
-## Mock callable
-def mock_callable(message: dict) -> dict:
-    return message

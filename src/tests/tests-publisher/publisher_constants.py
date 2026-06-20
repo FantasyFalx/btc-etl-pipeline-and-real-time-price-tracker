@@ -8,6 +8,8 @@
 
 ## Fixtures ##
 
+PUBLISHER_TEST_TICKER = "BTC-USD"
+
 ## Mock Paths ##
 MOCK_PATHS = {
     "set_publisher_client": "btc_streaming_etl.pubsub.pubsub_publisher.pubsub_v1.PublisherClient",
@@ -18,7 +20,7 @@ MOCK_PATHS = {
 MOCK_TOPIC_PATH = "projects/bitcoin-streaming-etl-project/topics/btc_price_topic"
 
 MOCK_MESSAGE = {
-    "id": "BTC-USD",
+    "id": PUBLISHER_TEST_TICKER,
     "price": 75751.76,
     "time": "1777478204000",
     "currency": "USD",

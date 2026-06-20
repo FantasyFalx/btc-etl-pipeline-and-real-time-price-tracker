@@ -49,7 +49,6 @@ class YFinanceManager:
         validator = DataValidator()
         return validator.validate_message(message)
 
-
 if __name__ == "__main__":
     btc_manager = YFinanceManager()
     btc_manager.set_ticker("BTC-USD")

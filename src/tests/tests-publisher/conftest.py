@@ -7,7 +7,7 @@ import pytest
 # Custom modules
 from btc_streaming_etl.pubsub.pubsub_publisher import PubSubPublisher
 from google.api_core.exceptions import GoogleAPICallError
-from constants import (
+from publisher_constants import (
     MOCK_PATHS, 
     MOCK_TOPIC_PATH, 
     RESULT_STRING, 
@@ -70,10 +70,9 @@ def mock_publish_message_success(mocker, publisher_factory_fixture):
         MOCK_PATHS["publish_message"],
         return_value=mocker.MagicMock()
     )
-    client = mocker.MagicMock()
-    # This set up is incorrect. 
+    client = mocker.MagicMock() 
     publisher_factory_fixture._publisher_client = client
-    client.publish_message.return_value = RESULT_STRING
+    publisher_factory_fixture.publish_message.return_value = RESULT_STRING
     return publisher_factory_fixture
 
 
