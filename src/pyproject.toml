@@ -11,8 +11,8 @@ dependencies = [
     "yfinance",
     "pytest",
     "pytest-mock",
-    "pydantic"
-
+    "pydantic",
+    "google-api-python-client"
 ]
 
 [tool.pytest.ini_options]

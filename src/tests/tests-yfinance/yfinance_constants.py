@@ -3,10 +3,10 @@
 # Custom modules
 
 # Constants
-TEST_TICKER = "BTC-USD"
+YFINANCE_TEST_TICKER = "BTC-USD"
 
 VALID_YFINANCE_BTC_MESSAGE = {
-    "id": TEST_TICKER,
+    "id": YFINANCE_TEST_TICKER,
     "price": 75751.76,
     "time": "1777478204000",
     "currency": "USD",
@@ -49,3 +49,7 @@ INVALID_YFINANCE_BTC_MESSAGE = {
     "from_currency": 999,
     "circulating_supply": "20022372.0",
 }
+
+
+def mock_callable(message: dict) -> dict:
+    return message

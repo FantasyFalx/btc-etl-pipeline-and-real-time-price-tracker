@@ -5,11 +5,11 @@
 
 
 # Constants
-TEST_TICKER = "BTC-USD"
+THREAD_TEST_TICKER = "BTC-USD"
 
 
 VALID_YFINANCE_BTC_MESSAGE = {
-    "id": TEST_TICKER,
+    "id": THREAD_TEST_TICKER,
     "price": 75751.76,
     "time": "1777478204000",
     "currency": "USD",
