@@ -1,0 +1,59 @@
+# Standard libraries:
+import logging
+
+# 3rd Party:
+import json
+import apache_beam as beam
+from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.options.pipeline_options import StandardOptions
+
+# Custom Libraries
+from btc_streaming_etl.dataflow.configs.configs import (
+    TABLE_SCHEMA,
+    OUTPUT_TABLE,
+    PIPELINE_OPTIONS,
+    SUBSCRIPTION,
+)
+
+class MessageDecoder(beam.DoFn):
+    def process(self, element: bytes):
+        yield element.decode('utf-8')
+
+class PipelineLogger(beam.DoFn):
+    def process(self, element):
+        logging.info(f"Incoming BTC pub/sub message: {element}")
+        yield element
+
+
+def pipeline_runner() -> None:
+
+    flag = "--dataflow_service_options=enable_preflight_validation=false"
+    options = PipelineOptions(flags=[flag], **PIPELINE_OPTIONS)
+    options.view_as(StandardOptions).streaming = True
+
+    with beam.Pipeline(options=options) as btc_pipeline:
+
+        streaming_data = (
+            
+            btc_pipeline
+            | "Extracts the pub/sub message."
+            >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION).with_output_types(
+                bytes
+            )
+            | "Decodes the BTC pub/sub message data." >> beam.ParDo(MessageDecoder())
+            | "Logs current processed message to the console." >> beam.ParDo(PipelineLogger())
+            | "Logs current JSON encoded message to the console." >> beam.ParDo(PipelineLogger())
+        )
+
+        streaming_data | "Appends messages to BigQuery table." >> beam.io.WriteToBigQuery(
+            table=OUTPUT_TABLE,
+            schema=TABLE_SCHEMA,
+            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+        )
+
+
+if __name__ == "__main__":
+    pipeline_runner()
+else: 
+    None

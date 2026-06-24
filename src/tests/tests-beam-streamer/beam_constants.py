@@ -1,4 +1,4 @@
-"""Test constants for PubSubPublisher module tests."""
+"""Test constants for Apache Beam Dataflow pipeline module tests."""
 
 ## IMPORTS ##
 # STANDARD LIBRARIES
@@ -6,19 +6,13 @@
 # CUSTOM IMPORTS
 ##############
 
-## Fixtures ##
-
-PUBLISHER_TEST_TICKER = "BTC-USD"
-
 ## Mock Paths ##
 MOCK_PATHS = {
-    "set_publisher_client": "btc_streaming_etl.pubsub.pubsub_publisher.pubsub_v1.PublisherClient",
-    "set_topic_path": "btc_streaming_etl.pubsub.pubsub_publisher.PubSubPublisher.set_topic_path",
-    "publish_message": "btc_streaming_etl.pubsub.pubsub_publisher.PubSubPublisher.publish_message",
+    "read_from_pubsub": "apache_beam.io.ReadFromPubSub",
+    "write_to_bigquery": "apache_beam.io.WriteToBigQuery",
 }
 
-MOCK_TOPIC_PATH = "projects/bitcoin-streaming-etl-project/topics/btc_price_topic"
-
+## Mock Data ##
 MOCK_MESSAGE = {
     "id": "BTC-USD",
     "price": 75751.76,
@@ -41,8 +35,6 @@ MOCK_MESSAGE = {
     "circulating_supply": 20022372.0,
     "market_cap": 1516389140000.0,
 }
-
-RESULT_STRING = "12345678901234567890"
 
 
 if __name__ == "__main__":

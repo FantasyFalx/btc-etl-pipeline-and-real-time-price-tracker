@@ -8,7 +8,6 @@ import yfinance as yf
 # Custom modules
 from btc_streaming_etl.pubsub.data_validator import DataValidator
 
-
 logging.basicConfig(level=logging.INFO)
 
 
@@ -48,6 +47,7 @@ class YFinanceManager:
     def is_valid_message(self, message: dict) -> bool:
         validator = DataValidator()
         return validator.validate_message(message)
+
 
 if __name__ == "__main__":
     btc_manager = YFinanceManager()

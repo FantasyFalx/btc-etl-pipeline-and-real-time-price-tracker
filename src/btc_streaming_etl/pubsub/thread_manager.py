@@ -14,8 +14,11 @@ from btc_streaming_etl.pubsub.pubsub_publisher import PubSubPublisher
 
 logging.basicConfig(level=logging.INFO)
 
+
 class ThreadManager:
-    def __init__(self, producer_object: YFinanceManager, consumer_object: PubSubPublisher):
+    def __init__(
+        self, producer_object: YFinanceManager, consumer_object: PubSubPublisher
+    ):
         self.thread: threading.Thread | None = None
         self.thread_running: bool = False
         self.event: threading.Event = threading.Event()
@@ -54,7 +57,7 @@ class ThreadManager:
 
         try:
             self.producer_object.run_socket(self.queue_gluer)
-            
+
         except Exception as e:
             event.set()
             queue.put(self.SENTINEL)
@@ -83,5 +86,3 @@ class ThreadManager:
 
             except Empty:
                 continue
-
-            

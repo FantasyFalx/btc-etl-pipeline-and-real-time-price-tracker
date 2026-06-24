@@ -3,7 +3,6 @@
 # Custom modules
 
 
-
 # Constants
 THREAD_TEST_TICKER = "BTC-USD"
 
