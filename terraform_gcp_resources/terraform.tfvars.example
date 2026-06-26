@@ -1,10 +1,7 @@
 # terraform.tfvars.example
 # Copy to production.auto.tfvars (or terraform.tfvars) and fill in real values.
 # Pattern: key = "value" OR ["value", ..].
-# List order must match main.tf index usage:
-#   api_services[0]=pubsub, [1]=dataflow, [2]=bigquery, [3]=compute, [4]=storage
-#   service_account_ids[0]=dataflow, [1]=compute, [2]=storage
-#   repository_ids[0]=pub/sub artifact registry
+# Replace variable values with your own values in your *.auto.tfvars file.
 
 project_id = "my-project-888"
 region     = "us-central1"
@@ -15,20 +12,85 @@ api_services = [
   "bigquery.googleapis.com",
   "compute.googleapis.com",
   "storage.googleapis.com",
+  "artifactregistry.googleapis.com",
+  "run.googleapis.com",
 ]
 
 service_account_ids = [
   "data-flow-9999",
   "compute-8888",
   "storage-8888",
+  "artifact-registry-8888"
 ]
 
 service_account_display_names = [
   "data-flow-controller",
   "compute-controller",
   "storage-controller",
+  "artifact-registry-controller"
 ]
 
 repository_ids = [
   "pub-sub-script-repo",
+]
+
+service_account_roles = [
+  "roles/dataflow.admin",
+  "roles/storage.objectAdmin",
+  "roles/bigquery.dataEditor",
+  "roles/pubsub.subscriber",
+  "roles/storage.objectAdmin",
+  "roles/run.admin",
+  "roles/pubsub.publisher",
+  "roles/artifactregistry.reader",
+  "roles/artifactregistry.writer",
+]
+
+storage_bucket_names = [
+  "staging-bucket-88888",
+]
+
+storage_bucket_iam_roles = [
+  "roles/storage.objectAdmin",
+]
+
+pubsub_topic_ids = [
+  "btc_price_topic",
+]
+
+pubsub_subscription_ids = [
+  "btc_pull_topic",
+]
+
+pubsub_topic_iam_roles = [
+  "roles/pubsub.publisher",
+]
+
+pubsub_subscription_iam_roles = [
+  "roles/pubsub.subscriber",
+]
+
+artifact_registry_iam_roles = [
+  "roles/artifactregistry.writer",
+  "roles/artifactregistry.reader",
+]
+
+service_account_user_roles = [
+  "roles/iam.serviceAccountUser",
+]
+
+bigquery_dataset_ids = [
+  "bitcoin_streaming_dataset",
+]
+
+bigquery_dataset_locations = [
+  "US",
+]
+
+bigquery_table_ids = [
+  "bitcoin-data-streaming-table",
+]
+
+bigquery_dataset_iam_roles = [
+  "roles/bigquery.dataEditor",
 ]
