@@ -44,7 +44,7 @@ client_secrets.json
 *.key
 btc_dashboard/.streamlit/secrets.toml
 btc_dashboard/configs/*.json
-src/btc_streaming_etl/gcloud_credentials/*.json
+.keys/*.json
 
 # Terraform
 .terraform/
