@@ -13,7 +13,8 @@ dependencies = [
     "pytest",
     "pytest-mock",
     "pydantic",
-    "google-api-python-client"
+    "google-api-python-client",
+    "setuptools"
 ]
 
 [tool.pytest.ini_options]

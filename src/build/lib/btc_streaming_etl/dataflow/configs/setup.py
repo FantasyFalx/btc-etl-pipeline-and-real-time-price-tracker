@@ -1,14 +1,11 @@
-
 # Imports
 # Standard Libaries
 import setuptools
+
 # 3rd Party Libraries
 # Custom Libraries
 
-PACKAGES = [
-    "apache-beam[gcp]",
-    "apache-beam"
-]
+PACKAGES = ["apache-beam[gcp]", "apache-beam"]
 
 setuptools.setup(
     name="real_time_btc_streaming_pipeline",
@@ -16,5 +13,5 @@ setuptools.setup(
     setup_requries=PACKAGES,
     install_requires=PACKAGES,
     package=setuptools.find_packages(),
-    include_package_data=True
+    include_package_data=True,
 )

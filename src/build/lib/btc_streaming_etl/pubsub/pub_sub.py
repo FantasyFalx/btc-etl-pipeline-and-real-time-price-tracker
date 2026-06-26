@@ -83,7 +83,7 @@ def payload_creator() -> str:
         logging.error(
             "Blank data will only be present, until requests are accepted. by server."
         )
-        return json.dumps({})  # Return empty dict on API call failure
+        return json.dumps({})
 
 
 def pub_sub_publisher() -> None:

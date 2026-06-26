@@ -1,0 +1,34 @@
+# terraform.tfvars.example
+# Copy to production.auto.tfvars (or terraform.tfvars) and fill in real values.
+# Pattern: key = "value" OR ["value", ..].
+# List order must match main.tf index usage:
+#   api_services[0]=pubsub, [1]=dataflow, [2]=bigquery, [3]=compute, [4]=storage
+#   service_account_ids[0]=dataflow, [1]=compute, [2]=storage
+#   repository_ids[0]=pub/sub artifact registry
+
+project_id = "my-project-888"
+region     = "us-central1"
+
+api_services = [
+  "pubsub.googleapis.com",
+  "dataflow.googleapis.com",
+  "bigquery.googleapis.com",
+  "compute.googleapis.com",
+  "storage.googleapis.com",
+]
+
+service_account_ids = [
+  "data-flow-9999",
+  "compute-8888",
+  "storage-8888",
+]
+
+service_account_display_names = [
+  "data-flow-controller",
+  "compute-controller",
+  "storage-controller",
+]
+
+repository_ids = [
+  "pub-sub-script-repo",
+]

@@ -8,8 +8,13 @@ SERVICE_ACCOUNT_EMAIL = (
 )
 STAGING_LOCATION = "gs://staging-bucket-88888/staging"
 TEMP_LOCATION = "gs://staging-bucket-88888/tmp"
+
+## runner options: DataflowRunner, DirectRunner
 RUNNER = "DataflowRunner"
+DIRECT_RUNNER = "DirectRunner"
 SETUP_FILE = "./configs/setup.py"
+LOCAL_FILE = "./src/btc_streaming_etl/dataflow/pipeline.py"
+
 SAVE_MAIN_SESSION = True
 ENABLE_PRE_FLIGHT_VALIDATION = False
 
@@ -20,8 +25,8 @@ PIPELINE_OPTIONS = {
     "service_account_email": SERVICE_ACCOUNT_EMAIL,
     "staging_location": STAGING_LOCATION,
     "temp_location": TEMP_LOCATION,
-    "runner": RUNNER,
-    "setup_file": SETUP_FILE,
+    "runner": DIRECT_RUNNER,
+    "setup_file": LOCAL_FILE,
     "save_main_session": SAVE_MAIN_SESSION,
 }
 

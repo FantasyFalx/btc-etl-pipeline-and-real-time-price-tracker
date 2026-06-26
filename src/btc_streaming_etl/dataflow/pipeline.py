@@ -24,13 +24,16 @@ class PipelineLogger(beam.DoFn):
         logging.info(f"Incoming BTC pub/sub message: {element}")
         yield element
 
+class JsonDecoder(beam.DoFn):
+    def process(self, element):
+        yield json.loads(element)
 
 def pipeline_runner() -> None:
 
     flag = "--dataflow_service_options=enable_preflight_validation=false"
     options = PipelineOptions(flags=[flag], **PIPELINE_OPTIONS)
     options.view_as(StandardOptions).streaming = True
-
+    
     with beam.Pipeline(options=options) as btc_pipeline:
 
         streaming_data = (
@@ -40,9 +43,18 @@ def pipeline_runner() -> None:
             >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION).with_output_types(
                 bytes
             )
-            | "Decodes the BTC pub/sub message data." >> beam.ParDo(MessageDecoder())
-            | "Logs current processed message to the console." >> beam.ParDo(PipelineLogger())
-            | "Logs current JSON encoded message to the console." >> beam.ParDo(PipelineLogger())
+            | "Decodes the BTC pub/sub message data." >> beam.ParDo(
+                MessageDecoder()
+            )
+            | "Logs current processed message to the console." >> beam.ParDo(
+                PipelineLogger()
+            )
+            | "Logs current JSON encoded message to the console." >> beam.ParDo(
+                PipelineLogger()
+            )
+            | "Decodes the JSON message to a dictionary." >> beam.ParDo(
+                JsonDecoder()
+            )
         )
 
         streaming_data | "Appends messages to BigQuery table." >> beam.io.WriteToBigQuery(

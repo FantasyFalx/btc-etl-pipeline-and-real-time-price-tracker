@@ -13,3 +13,4 @@ Requires-Dist: pytest
 Requires-Dist: pytest-mock
 Requires-Dist: pydantic
 Requires-Dist: google-api-python-client
+Requires-Dist: setuptools

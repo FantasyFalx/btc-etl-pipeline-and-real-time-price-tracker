@@ -7,3 +7,4 @@ pytest
 pytest-mock
 pydantic
 google-api-python-client
+setuptools
