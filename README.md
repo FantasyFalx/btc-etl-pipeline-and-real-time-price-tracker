@@ -30,7 +30,7 @@ The pipeline consists of the following stages:
 - **Compute**: Google Compute Engine (GCE), Cloud Run ⚡
 - **Data Services**: Pub/Sub, Dataflow, BigQuery, Secret Manager 📡
 
-## 📂 Project Structure
+## 📂 Project Structure **
 
 - `src/btc_streaming_etl/pubsub/message_controller.py`: Entry point that wires ingestion and publishing together.
 - `src/btc_streaming_etl/pubsub/yfinance_manager.py`: WebSocket client for live BTC-USD price streaming via `yfinance`.
