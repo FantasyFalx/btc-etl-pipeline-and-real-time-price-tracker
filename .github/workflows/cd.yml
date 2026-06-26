@@ -3,11 +3,7 @@ name: CD
 # TODO: Add a trigger for the CD pipeline to run when a pull request is merged into the main branch.
 on:
   push:
-    branches:
-      - main
-    types:
-      - closed
-
+    branches: [main]
   workflow_dispatch:
 
 env:
