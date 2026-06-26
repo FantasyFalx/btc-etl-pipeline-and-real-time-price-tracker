@@ -4,9 +4,11 @@
 # STANDARD LIBRARIES
 import logging
 import json
+
 # 3RD PARTY LIBRARIES
 from google.api_core.exceptions import GoogleAPICallError
 from google.cloud import pubsub_v1
+
 # CUSTOM IMPORTS
 ##############
 
@@ -28,7 +30,7 @@ class PubSubPublisher:
         except GoogleAPICallError as e:
             logging.error("Error publishing message: %s.", e)
             raise e
-    
+
     def set_topic_path(self) -> None:
         try:
             logging.info("Setting topic path.")
@@ -42,7 +44,7 @@ class PubSubPublisher:
             raise e
 
     def set_publisher_client(self) -> None:
-        try: 
+        try:
             logging.info("Setting publisher client.")
             self._publisher_client = pubsub_v1.PublisherClient()
             logging.info("Publisher client set successfully.")
@@ -52,6 +54,6 @@ class PubSubPublisher:
 
 
 if __name__ == "__main__":
-   None
+    None
 else:
     None

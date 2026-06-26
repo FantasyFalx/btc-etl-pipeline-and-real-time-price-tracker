@@ -7,22 +7,21 @@ import time
 # Custom modules
 from threading_constants import VALID_YFINANCE_BTC_MESSAGE, INVALID_YFINANCE_BTC_MESSAGE
 
+
 def test_producer(
     thread_manager_factory, yfinance_manager_factory, pubsub_publisher_factory
 ):
-    manager = thread_manager_factory(
-        yfinance_manager_factory, pubsub_publisher_factory
-    )
-    
+    manager = thread_manager_factory(yfinance_manager_factory, pubsub_publisher_factory)
+
     # Configs
     event = threading.Event()
     message_queue = manager.message_queue
 
     for message in range(4):
         message_queue.put(f"message_{message}")
-    
+
     # Start producer in a thread
-    # Inserts items into the thread. 
+    # Inserts items into the thread.
     producer_thread = threading.Thread(
         target=manager.producer, args=(message_queue, event)
     )
@@ -31,7 +30,7 @@ def test_producer(
     time.sleep(1)
     # Signal the producer to stop
     event.set()
-    # Get item from the queue, so it does not hang. 
+    # Get item from the queue, so it does not hang.
     """
     This is so the test does not fail and hang when queue fills. 
     The queue fills fast, and on the next put it hangs because it hits the maxsize. 
@@ -43,11 +42,13 @@ def test_producer(
     producer_thread.join(timeout=2)
 
     # Check if at least one item is in the queue and thread is not alive
-    assert message_queue.qsize() > 0 and not producer_thread.is_alive() # Adjust as per what producer actually does
-    
+    assert (
+        message_queue.qsize() > 0 and not producer_thread.is_alive()
+    )  # Adjust as per what producer actually does
+
 
 def test_consumer(thread_manager_factory, producer_callable, pubsub_publisher_factory):
-    manager = thread_manager_factory(producer_callable, pubsub_publisher_factory) 
+    manager = thread_manager_factory(producer_callable, pubsub_publisher_factory)
     event = threading.Event()
     queue = manager.message_queue
     sample_size = 10
@@ -58,7 +59,6 @@ def test_consumer(thread_manager_factory, producer_callable, pubsub_publisher_fa
     event.set()
     manager.consumer(queue, event)
     assert queue.qsize() == 0
-
 
 
 def test_execute_threads(

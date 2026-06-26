@@ -5,6 +5,7 @@ description = "A streaming service for BTC price data."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "apache-beam[gcp]",
     "google-cloud-pubsub",
     "google-auth",
     "python-dotenv",
@@ -12,7 +13,8 @@ dependencies = [
     "pytest",
     "pytest-mock",
     "pydantic",
-    "google-api-python-client"
+    "google-api-python-client",
+    "setuptools"
 ]
 
 [tool.pytest.ini_options]

@@ -1,9 +1,7 @@
-"""File for storing creating credential objects for service account use in development. 
-"""
+"""File for storing creating credential objects for service account use in development."""
 
 # Imports
 from google.oauth2.service_account import Credentials
-
 
 # PATH LINKS
 # Change these back to relative paths one the real development begins.
@@ -19,8 +17,5 @@ DEV_CREDS = {
     "cloud_stroage": Credentials.from_service_account_file(CLOUD_STORAGE_CRED),
     "pub_sub": Credentials.from_service_account_file(PUB_SUB_CRED),
     "cloud_monitoring": Credentials.from_service_account_file(CLOUD_MONITORING_CRED),
-    "data_flow": Credentials.from_service_account_file(DATA_FLOW_CRED)
+    "data_flow": Credentials.from_service_account_file(DATA_FLOW_CRED),
 }
-
-
-
