@@ -1,0 +1,30 @@
+{
+  "image": "us-central1-docker.pkg.dev/bitcoin-streaming-etl-project/pub-sub-script-repo/btc-dataflow-pipeline:latest",
+  "sdk_info": {
+    "language": "PYTHON"
+  },
+  "metadata": {
+    "name": "BTC Streaming Dataflow Pipeline",
+    "description": "Reads BTC price messages from Pub/Sub and writes to BigQuery.",
+    "parameters": [
+      {
+        "name": "subscription",
+        "label": "Pub/Sub subscription",
+        "helpText": "Full Pub/Sub subscription path e.g. projects/my-project/subscriptions/btc_pull_topic",
+        "isOptional": false
+      },
+      {
+        "name": "output",
+        "label": "Output BigQuery table",
+        "helpText": "BigQuery table e.g. my-project:my_dataset.my_table",
+        "isOptional": false
+      },
+      {
+        "name": "temp_location",
+        "label": "Temp GCS location",
+        "helpText": "GCS temp path e.g. gs://my-bucket/tmp",
+        "isOptional": false
+      }
+    ]
+  }
+}
