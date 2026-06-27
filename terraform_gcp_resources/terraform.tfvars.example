@@ -20,14 +20,14 @@ service_account_ids = [
   "data-flow-9999",
   "compute-8888",
   "storage-8888",
-  "artifact-registry-8888"
+  "pub-sub-deployer-8888"
 ]
 
 service_account_display_names = [
   "data-flow-controller",
   "compute-controller",
   "storage-controller",
-  "artifact-registry-controller"
+  "pub-sub-deployer-controller"
 ]
 
 repository_ids = [
@@ -43,7 +43,9 @@ service_account_roles = [
   "roles/run.admin",
   "roles/pubsub.publisher",
   "roles/artifactregistry.reader",
+  "roles/run.admin",
   "roles/artifactregistry.writer",
+  "roles/artifactregistry.reader",
 ]
 
 storage_bucket_names = [

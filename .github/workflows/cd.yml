@@ -8,7 +8,7 @@ on:
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
-  GCP_SA_KEY: ${{ secrets.GCP_ARTIFACT_REGISTRY_KEY }}
+  GCP_SA_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   PUBSUB_ARTIFACT_REPO: pub-sub-script-repo
   PUBSUB_IMAGE_NAME: btc-pubsub-messenger
 
@@ -81,7 +81,9 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
+      
 
+      ## TODO: Add role to deploy to cloud run for the service account. 
       - name: Deploy Pub/Sub messenger to Cloud Run
         run: |
           gcloud run deploy btc-pubsub-messenger \
