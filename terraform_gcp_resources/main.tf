@@ -164,7 +164,7 @@ resource "google_project_service" "cloud_run" {
 
 ## Service Accounts ##
 
-resource "google_service_account" "artifact_registry_service_account" {
+resource "google_service_account" "pub_sub_deployer_service_account" {
   account_id   = var.service_account_ids[3]
   display_name = var.service_account_display_names[3]
 }
@@ -196,6 +196,28 @@ resource "google_project_iam_member" "data_flow_admin_binding" {
 
 ########################################################
 
+## Pub/Sub Deployer Service Account (CI/CD) ##
+
+resource "google_project_iam_member" "deployer_run_admin_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[8]
+  member  = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
+}
+
+resource "google_project_iam_member" "deployer_artifact_registry_writer_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[9]
+  member  = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
+}
+
+resource "google_project_iam_member" "deployer_artifact_registry_reader_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[10]
+  member  = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
+}
+
+########################################################
+
 ## Artifact Registry ##
 
 resource "google_artifact_registry_repository" "pubsub_script_repo" {
@@ -207,18 +229,12 @@ resource "google_artifact_registry_repository" "pubsub_script_repo" {
   depends_on = [google_project_service.artifact_registry]
 }
 
-resource "google_project_iam_member" "artifact_registry_writer_binding" {
-  project = var.project_id
-  role    = var.service_account_roles[8]
-  member  = "serviceAccount:${google_service_account.artifact_registry_service_account.email}"
-}
-
-resource "google_artifact_registry_repository_iam_member" "artifact_registry_writer_repo_binding" {
+resource "google_artifact_registry_repository_iam_member" "deployer_writer_repo_binding" {
   project    = var.project_id
   location   = var.region
   repository = google_artifact_registry_repository.pubsub_script_repo.name
   role       = var.artifact_registry_iam_roles[0]
-  member     = "serviceAccount:${google_service_account.artifact_registry_service_account.email}"
+  member     = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
 
 resource "google_artifact_registry_repository_iam_member" "compute_reader_repo_binding" {
@@ -232,12 +248,12 @@ resource "google_artifact_registry_repository_iam_member" "compute_reader_repo_b
 resource "google_service_account_iam_member" "compute_sa_cd_actas_binding" {
   service_account_id = google_service_account.compute_service_account.name
   role               = var.service_account_user_roles[0]
-  member             = "serviceAccount:${google_service_account.artifact_registry_service_account.email}"
+  member             = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
 
 ########################################################
 
-## Compute Service Account (Cloud Run / CD) ##
+## Compute Service Account (Cloud Run runtime) ##
 
 resource "google_project_iam_member" "compute_run_admin_binding" {
   project = var.project_id
@@ -263,7 +279,7 @@ resource "google_project_iam_member" "storage_admin_binding" {
 
 ########################################################
 
-## Pipeline Resources ##O
+## Pipeline Resources ##
 
 locals {
   bitcoin_streaming_table_schema = jsonencode([
