@@ -19,11 +19,6 @@ env:
   PUBSUB_IMAGE_NAME: btc-pubsub-messenger
   DATAFLOW_IMAGE_NAME: btc-dataflow-pipeline
 
-  # Derived paths (use secrets here — job env cannot reference workflow env)
-  PUBSUB_IMAGE: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pub-sub-script-repo/btc-pubsub-messenger
-  DATAFLOW_IMAGE: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pub-sub-script-repo/btc-dataflow-pipeline
-  TEMPLATE_GCS_PATH: gs://${{ secrets.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -33,6 +28,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set image paths
+        run: |
+          echo "PUBSUB_IMAGE=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}" >> "$GITHUB_ENV"
+          echo "DATAFLOW_IMAGE=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}" >> "$GITHUB_ENV"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -72,6 +72,10 @@ jobs:
       contents: read
 
     steps:
+      - name: Set image paths
+        run: |
+          echo "PUBSUB_IMAGE=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}" >> "$GITHUB_ENV"
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -101,6 +105,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set paths
+        run: |
+          echo "DATAFLOW_IMAGE=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}" >> "$GITHUB_ENV"
+          echo "TEMPLATE_GCS_PATH=gs://${{ secrets.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" >> "$GITHUB_ENV"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
