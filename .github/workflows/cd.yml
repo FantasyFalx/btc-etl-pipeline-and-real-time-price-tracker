@@ -9,11 +9,9 @@ env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
   GCP_SA_KEY: ${{ secrets.GCP_ARTIFACT_REGISTRY_KEY }}
-  ## TODO: Add these to github secrets. 
-  PUBSUB_ARTIFACT_REPO: ${{ secrets.PUB_SUB_REPOSITORY_NAME }}
-  PUBSUB_IMAGE_NAME: ${{ secrets.PUBSUB_IMAGE_NAME }}
-  PUBSUB_IMAGE: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.PUB_SUB_REPOSITORY_NAME }}/${{ secrets.PUBSUB_IMAGE_NAME }}
-  ## 
+  PUBSUB_ARTIFACT_REPO: pub-sub-script-repo
+  PUBSUB_IMAGE_NAME: btc-pubsub-messenger
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -23,13 +21,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Validate GCP configuration
+      
+      - name: Set image URI
         run: |
-          if [ -z "${{ secrets.GCP_PROJECT_ID }}" ] || [ -z "${{ secrets.GCP_REGION }}" ]; then
+          PROJECT_ID="$(printf '%s' '${{ secrets.GCP_PROJECT_ID }}' | tr -d '[:space:]')"
+          REGION="$(printf '%s' '${{ secrets.GCP_REGION }}' | tr -d '[:space:]')"
+          REPO="pub-sub-script-repo"
+          IMAGE_NAME="btc-pubsub-messenger"
+
+          if [ -z "$PROJECT_ID" ] || [ -z "$REGION" ]; then
             echo "::error::GCP_PROJECT_ID and GCP_REGION must be set in repository secrets."
             exit 1
           fi
+
+          PUBSUB_IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/${IMAGE_NAME}"
+          echo "PUBSUB_IMAGE=${PUBSUB_IMAGE}" >> "$GITHUB_ENV"
+          echo "Image: ${PUBSUB_IMAGE}"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -60,6 +67,13 @@ jobs:
       contents: read
 
     steps:
+      - name: Set image URI
+        run: |
+          PROJECT_ID="$(printf '%s' '${{ secrets.GCP_PROJECT_ID }}' | tr -d '[:space:]')"
+          REGION="$(printf '%s' '${{ secrets.GCP_REGION }}' | tr -d '[:space:]')"
+          PUBSUB_IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/pub-sub-script-repo/btc-pubsub-messenger"
+          echo "PUBSUB_IMAGE=${PUBSUB_IMAGE}" >> "$GITHUB_ENV"
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -71,7 +85,7 @@ jobs:
       - name: Deploy Pub/Sub messenger to Cloud Run
         run: |
           gcloud run deploy btc-pubsub-messenger \
-            --image "${{ env.PUBSUB_IMAGE }}:latest" \
+            --image "${PUBSUB_IMAGE}:latest" \
             --region "${{ env.GCP_REGION }}" \
             --service-account "compute-8888@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com" \
             --quiet
