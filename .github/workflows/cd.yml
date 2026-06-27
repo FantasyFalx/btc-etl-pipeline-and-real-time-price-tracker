@@ -5,21 +5,26 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Secrets → vars (reference these as ${{ env.VAR_NAME }} everywhere below)
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
-  PUBSUB_IMAGE: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pub-sub-script-repo/btc-pubsub-messenger
-  DATAFLOW_IMAGE: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pub-sub-script-repo/btc-dataflow-pipeline
-  TEMPLATE_GCS_PATH: gs://${{ secrets.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json
+  GCP_SA_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   COMPUTE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.COMPUTE_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_SERVICE_ACCOUNT_EMAIL: ${{ secrets.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_STAGING_BUCKET: ${{ secrets.DATAFLOW_STAGING_BUCKET }}
+  ARTIFACT_REPO: pub-sub-script-repo
+  PUBSUB_IMAGE_NAME: btc-pubsub-messenger
+  DATAFLOW_IMAGE_NAME: btc-dataflow-pipeline
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      PUBSUB_IMAGE: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}
+      DATAFLOW_IMAGE: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}
 
     steps:
       - name: Checkout
@@ -28,7 +33,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -61,12 +66,14 @@ jobs:
     needs: build-and-push
     permissions:
       contents: read
+    env:
+      PUBSUB_IMAGE: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}
 
     steps:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -88,6 +95,9 @@ jobs:
     needs: build-and-push
     permissions:
       contents: read
+    env:
+      DATAFLOW_IMAGE: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}
+      TEMPLATE_GCS_PATH: gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json
 
     steps:
       - name: Checkout
@@ -96,7 +106,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -119,5 +129,5 @@ jobs:
             --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GCP_REGION }}" \
             --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
-            --parameters "subscription=projects/${{ env.GCP_PROJECT_ID }}/subscriptions/btc_pull_topic,output=${{ env.GCP_PROJECT_ID }}.bitcoin_streaming_dataset.bitcoin-data-streaming-table,temp_location=gs://${{ secrets.DATAFLOW_STAGING_BUCKET }}/tmp" \
+            --parameters "subscription=projects/${{ env.GCP_PROJECT_ID }}/subscriptions/btc_pull_topic,output=${{ env.GCP_PROJECT_ID }}.bitcoin_streaming_dataset.bitcoin-data-streaming-table,temp_location=gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
             --quiet
