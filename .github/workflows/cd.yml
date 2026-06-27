@@ -11,6 +11,7 @@ env:
   GCP_SA_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   PUBSUB_ARTIFACT_REPO: pub-sub-script-repo
   PUBSUB_IMAGE_NAME: btc-pubsub-messenger
+  COMPUTE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.COMPUTE_SERVICE_ACCOUNT_EMAIL }}
 
 jobs:
   build-and-push:
@@ -89,5 +90,5 @@ jobs:
           gcloud run deploy btc-pubsub-messenger \
             --image "${PUBSUB_IMAGE}:latest" \
             --region "${{ env.GCP_REGION }}" \
-            --service-account "compute-8888@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com" \
+            --service-account "${{ env.COMPUTE_SERVICE_ACCOUNT_EMAIL }}" \
             --quiet
