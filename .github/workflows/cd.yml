@@ -63,7 +63,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
-    # if: github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
 
@@ -83,12 +82,14 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
       
-
-      ## TODO: Add role to deploy to cloud run for the service account. 
-      - name: Deploy Pub/Sub messenger to Cloud Run
+      - name: Deploy Pub/Sub messenger Cloud Run job
         run: |
-          gcloud run deploy btc-pubsub-messenger \
+          gcloud run jobs deploy btc-pubsub-messenger \
             --image "${PUBSUB_IMAGE}:latest" \
             --region "${{ env.GCP_REGION }}" \
             --service-account "${{ env.COMPUTE_SERVICE_ACCOUNT_EMAIL }}" \
+            --tasks 1 \
+            --max-retries 3 \
+            --task-timeout 168h \
+            --execute-now \
             --quiet
