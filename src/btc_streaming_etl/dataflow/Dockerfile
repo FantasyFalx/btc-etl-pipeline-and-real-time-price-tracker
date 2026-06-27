@@ -1,14 +1,18 @@
-FROM python:3.12-slim
+# Build from the src/ directory:
+# GCS base for python dataflow flex templates.
+FROM gcr.io/dataflow-templates-base/python312-template-launcher-base
 
-WORKDIR /app
+ARG WORKDIR=/dataflow/template
+WORKDIR ${WORKDIR}
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# Pipeline files
+COPY btc_streaming_etl/dataflow/requirements.txt ./requirements.txt
+COPY btc_streaming_etl/dataflow/pipeline.py ./btc_streaming_etl/dataflow/pipeline.py
+COPY btc_streaming_etl/dataflow/__init__.py ./btc_streaming_etl/dataflow/__init__.py
+COPY btc_streaming_etl/dataflow/configs/configs.py ./btc_streaming_etl/dataflow/configs/configs.py
+COPY btc_streaming_etl/dataflow/configs/__init__.py ./btc_streaming_etl/dataflow/configs/__init__.py
 
-COPY pyproject.toml uv.lock ./
-COPY btc_streaming_etl ./btc_streaming_etl
-
-RUN uv sync --frozen --no-dev
-
-ENV PYTHONPATH=/app
-
-CMD ["uv", "run", "python", "-m", "btc_streaming_etl.dataflow.pipeline"]
+# Environment variables for the flex template
+ENV PYTHONPATH=${WORKDIR}
+ENV FLEX_TEMPLATE_PYTHON_PY_FILE="btc_streaming_etl/dataflow/pipeline.py"
+ENV FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE="requirements.txt"

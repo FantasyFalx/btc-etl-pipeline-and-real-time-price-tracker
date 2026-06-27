@@ -1,4 +1,5 @@
 # Standard libraries:
+import argparse
 import logging
 
 # 3rd Party:
@@ -28,19 +29,26 @@ class JsonDecoder(beam.DoFn):
     def process(self, element):
         yield json.loads(element)
 
-def pipeline_runner() -> None:
+def pipeline_runner(argv=None) -> None:
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--subscription", default=SUBSCRIPTION)
+    parser.add_argument("--output", default=OUTPUT_TABLE)
+    template_args, pipeline_args = parser.parse_known_args(argv)
 
     flag = "--dataflow_service_options=enable_preflight_validation=false"
-    options = PipelineOptions(flags=[flag], **PIPELINE_OPTIONS)
+    options = PipelineOptions(pipeline_args, flags=[flag], **PIPELINE_OPTIONS)
     options.view_as(StandardOptions).streaming = True
-    
+
     with beam.Pipeline(options=options) as btc_pipeline:
 
         streaming_data = (
             
             btc_pipeline
             | "Extracts the pub/sub message."
-            >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION).with_output_types(
+            >> beam.io.ReadFromPubSub(
+                subscription=template_args.subscription
+            ).with_output_types(
                 bytes
             )
             | "Decodes the BTC pub/sub message data." >> beam.ParDo(
@@ -58,7 +66,7 @@ def pipeline_runner() -> None:
         )
 
         streaming_data | "Appends messages to BigQuery table." >> beam.io.WriteToBigQuery(
-            table=OUTPUT_TABLE,
+            table=template_args.output,
             schema=TABLE_SCHEMA,
             write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
