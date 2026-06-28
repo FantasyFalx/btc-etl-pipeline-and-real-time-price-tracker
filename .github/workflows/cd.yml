@@ -11,7 +11,7 @@ env:
   # GCP Constants
   ## TODO: Update the secret configs so no formatting and reference errors occur.
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GAR_LOCATION: ${{ secrets.GCP_REGION }}
+  GAR_LOCATION: "us-central1"
   GCP_SA_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   COMPUTE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.COMPUTE_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_SERVICE_ACCOUNT_EMAIL: ${{ secrets.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}
