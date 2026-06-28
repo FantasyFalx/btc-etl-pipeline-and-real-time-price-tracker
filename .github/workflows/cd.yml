@@ -74,7 +74,7 @@ jobs:
           context: ./src
           file: ./src/btc_streaming_etl/pubsub/Dockerfile
           push: true
-          tags: |s
+          tags: |
             ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}
             ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:pubsub-latest
 
