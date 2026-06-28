@@ -10,7 +10,7 @@ env:
   
   # GCP Constants
   ## TODO: Update the secret configs so no formatting and reference errors occur.
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_PROJECT_ID: "bitcoin-streaming-etl-project"
   GAR_LOCATION: "us-central1"
   GCP_BUILD_AND_DEPLOY_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   COMPUTE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.COMPUTE_SERVICE_ACCOUNT_EMAIL }}
