@@ -46,6 +46,26 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
 
+      - name: Debug container image URI parts
+        run: |
+          echo "=== Debugging Pub/Sub Messenger Build and Push ==="
+          echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
+          echo "PROJECT_ID: ${{ env.PROJECT_ID }}"
+          echo "ARTIFACT_REPO: ${{ env.ARTIFACT_REPO }}"
+          echo "PUBSUB_IMAGE_NAME: ${{ env.PUBSUB_IMAGE_NAME }}"
+          echo "Full Pub/Sub Image URI:"
+          echo "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}"
+          echo
+
+          echo "=== Debugging Dataflow Build and Push ==="
+          echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
+          echo "PROJECT_ID: ${{ env.PROJECT_ID }}"
+          echo "ARTIFACT_REPO: ${{ env.ARTIFACT_REPO }}"
+          echo "DATAFLOW_IMAGE_NAME: ${{ env.DATAFLOW_IMAGE_NAME }}"
+          echo "Full Dataflow Image URI:"
+          echo "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:${{ github.sha }}"
+ 
+
       # Pub/Sub messenger build and push.
       # [registry]/[namespace]/[image]:[tag]
       - name: Build and push Pub/Sub messenger image
@@ -54,7 +74,7 @@ jobs:
           context: ./src
           file: ./src/btc_streaming_etl/pubsub/Dockerfile
           push: true
-          tags: |
+          tags: |s
             ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}
             ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:pubsub-latest
 
