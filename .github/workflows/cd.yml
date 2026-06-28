@@ -9,9 +9,10 @@ on:
 env:
   
   # GCP Constants
+  ## TODO: Update the secret configs so no formatting and reference errors occur.
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GAR_LOCATION: ${{ secrets.GCP_REGION }}
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  GCP_SA_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   COMPUTE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.COMPUTE_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_SERVICE_ACCOUNT_EMAIL: ${{ secrets.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_STAGING_BUCKET: ${{ secrets.DATAFLOW_STAGING_BUCKET }}
@@ -37,7 +38,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
