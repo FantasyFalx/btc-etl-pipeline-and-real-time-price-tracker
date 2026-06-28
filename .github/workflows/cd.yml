@@ -10,9 +10,9 @@ env:
   
   # GCP Constants
   ## TODO: Update the secret configs so no formatting and reference errors occur.
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GAR_LOCATION: "us-central1"
-  GCP_SA_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
+  GCP_BUILD_AND_DEPLOY_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
   COMPUTE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.COMPUTE_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_SERVICE_ACCOUNT_EMAIL: ${{ secrets.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}
   DATAFLOW_STAGING_BUCKET: ${{ secrets.DATAFLOW_STAGING_BUCKET }}
@@ -38,7 +38,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_BUILD_AND_DEPLOY_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -50,20 +50,20 @@ jobs:
         run: |
           echo "=== Debugging Pub/Sub Messenger Build and Push ==="
           echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
-          echo "PROJECT_ID: ${{ env.PROJECT_ID }}"
+          echo "GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}"
           echo "ARTIFACT_REPO: ${{ env.ARTIFACT_REPO }}"
           echo "PUBSUB_IMAGE_NAME: ${{ env.PUBSUB_IMAGE_NAME }}"
           echo "Full Pub/Sub Image URI:"
-          echo "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}"
+          echo "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}"
           echo
 
           echo "=== Debugging Dataflow Build and Push ==="
           echo "GAR_LOCATION: ${{ env.GAR_LOCATION }}"
-          echo "PROJECT_ID: ${{ env.PROJECT_ID }}"
+          echo "GCP_PROJECT_ID: ${{ env.GCP_PROJECT_ID }}"
           echo "ARTIFACT_REPO: ${{ env.ARTIFACT_REPO }}"
           echo "DATAFLOW_IMAGE_NAME: ${{ env.DATAFLOW_IMAGE_NAME }}"
           echo "Full Dataflow Image URI:"
-          echo "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:${{ github.sha }}"
+          echo "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:${{ github.sha }}"
  
 
       # Pub/Sub messenger build and push.
@@ -75,8 +75,8 @@ jobs:
           file: ./src/btc_streaming_etl/pubsub/Dockerfile
           push: true
           tags: |
-            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:pubsub-latest
+            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:pubsub-latest
 
       
       # Dataflow build and push.
@@ -88,8 +88,8 @@ jobs:
           file: ./src/btc_streaming_etl/dataflow/Dockerfile
           push: true
           tags: |            
-            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:beam-latest
+            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:beam-latest
     
   # Pub/Sub messenger Cloud Run job deployment.
   deploy-pubsub:
@@ -102,7 +102,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_BUILD_AND_DEPLOY_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -110,7 +110,7 @@ jobs:
       - name: Deploy Pub/Sub messenger Cloud Run job.
         run: |
           gcloud run jobs deploy btc-pubsub-messenger \
-            --image "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:latest" \
+            --image "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.PUBSUB_IMAGE_NAME }}:pubsub-latest" \
             --region "${{ env.GAR_LOCATION }}" \
             --service-account "${{ env.COMPUTE_SERVICE_ACCOUNT_EMAIL }}" \
             --tasks 1 \
@@ -133,7 +133,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_BUILD_AND_DEPLOY_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -143,10 +143,10 @@ jobs:
         run: |
           jq '.metadata' src/btc_streaming_etl/dataflow/flex_template.json > metadata.json
           gcloud dataflow flex-template build "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" \
-            --image-gcr-path "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:latest" \
+            --image-gcr-path "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:beam-latest" \
             --sdk-language "PYTHON" \
             --metadata-file metadata.json \
-            --project "${{ env.PROJECT_ID }}" \
+            --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GAR_LOCATION }}" \
             --quiet
       
@@ -155,8 +155,8 @@ jobs:
         run: |
           gcloud dataflow flex-template run "btc-streaming-${{ github.run_id }}" \
             --template-file-gcs-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" \
-            --project "${{ env.PROJECT_ID }}" \
+            --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GAR_LOCATION }}" \
             --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
-            --parameters "subscription=projects/${{ env.PROJECT_ID }}/subscriptions/btc_pull_topic,output=${{ env.PROJECT_ID }}.bitcoin_streaming_dataset.bitcoin-data-streaming-table,temp_location=gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
+            --parameters "subscription=projects/${{ env.GCP_PROJECT_ID }}/subscriptions/btc_pull_topic,output=${{ env.GCP_PROJECT_ID }}.bitcoin_streaming_dataset.bitcoin-data-streaming-table,temp_location=gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
             --quiet
