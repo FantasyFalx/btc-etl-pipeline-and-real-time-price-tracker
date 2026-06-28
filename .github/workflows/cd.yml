@@ -145,7 +145,6 @@ jobs:
             --sdk-language "PYTHON" \
             --metadata-file metadata.json \
             --project "${{ env.GCP_PROJECT_ID }}" \
-            --region "${{ env.GAR_LOCATION }}" \
             --quiet
       
       # Run Dataflow flex template job.
