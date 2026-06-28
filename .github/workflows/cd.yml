@@ -144,6 +144,7 @@ jobs:
             --image "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.DATAFLOW_IMAGE_NAME }}:beam-latest" \
             --sdk-language "PYTHON" \
             --metadata-file metadata.json \
+            --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
             --project "${{ env.GCP_PROJECT_ID }}" \
             --quiet
       
