@@ -37,7 +37,7 @@ def pipeline_runner(argv=None) -> None:
     template_args, pipeline_args = parser.parse_known_args(argv)
 
     flag = "--dataflow_service_options=enable_preflight_validation=false"
-    options = PipelineOptions(pipeline_args, flags=[flag], **PIPELINE_OPTIONS)
+    options = PipelineOptions(pipeline_args, flags=[flag])
     options.view_as(StandardOptions).streaming = True
 
     with beam.Pipeline(options=options) as btc_pipeline:
