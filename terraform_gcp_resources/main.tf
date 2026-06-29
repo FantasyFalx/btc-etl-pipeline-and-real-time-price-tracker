@@ -216,6 +216,12 @@ resource "google_project_iam_member" "deployer_artifact_registry_reader_binding"
   member  = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
 
+resource "google_storage_bucket_iam_member" "deployer_staging_object_creator_binding" {
+  bucket = google_storage_bucket.dataflow_staging.name
+  role   = "roles/storage.objectCreator"
+  member = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
+}
+
 ########################################################
 
 ## Artifact Registry ##

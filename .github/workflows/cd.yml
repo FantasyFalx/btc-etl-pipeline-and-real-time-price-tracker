@@ -131,6 +131,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
+        # TODO: Update the secret configs so no formatting and reference errors occur.
           credentials_json: ${{ env.GCP_BUILD_AND_DEPLOY_KEY }}
 
       - name: Set up Cloud SDK
