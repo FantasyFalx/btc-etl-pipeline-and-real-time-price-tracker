@@ -216,9 +216,15 @@ resource "google_project_iam_member" "deployer_artifact_registry_reader_binding"
   member  = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
 
+resource "google_project_iam_member" "deployer_dataflow_admin_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[0]
+  member  = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
+}
+
 resource "google_storage_bucket_iam_member" "deployer_staging_object_creator_binding" {
   bucket = google_storage_bucket.dataflow_staging.name
-  role   = "roles/storage.objectCreator"
+  role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
 
@@ -253,6 +259,12 @@ resource "google_artifact_registry_repository_iam_member" "compute_reader_repo_b
 
 resource "google_service_account_iam_member" "compute_sa_cd_actas_binding" {
   service_account_id = google_service_account.compute_service_account.name
+  role               = var.service_account_user_roles[0]
+  member             = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
+}
+
+resource "google_service_account_iam_member" "dataflow_sa_cd_actas_binding" {
+  service_account_id = google_service_account.dataflow_service_account.name
   role               = var.service_account_user_roles[0]
   member             = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
