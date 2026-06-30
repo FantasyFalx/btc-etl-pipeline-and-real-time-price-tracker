@@ -43,7 +43,6 @@ def pipeline_runner(argv=None) -> None:
     with beam.Pipeline(options=options) as btc_pipeline:
 
         streaming_data = (
-            
             btc_pipeline
             | "Extracts the pub/sub message."
             >> beam.io.ReadFromPubSub(
@@ -64,6 +63,7 @@ def pipeline_runner(argv=None) -> None:
                 JsonDecoder()
             )
         )
+   
 
         streaming_data | "Appends messages to BigQuery table." >> beam.io.WriteToBigQuery(
             table=template_args.output,

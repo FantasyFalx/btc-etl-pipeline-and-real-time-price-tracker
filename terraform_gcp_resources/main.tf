@@ -194,6 +194,18 @@ resource "google_project_iam_member" "data_flow_admin_binding" {
   member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
 }
 
+resource "google_project_iam_member" "dataflow_storage_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[1]
+  member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
+}
+
+resource "google_project_iam_member" "dataflow_pubsub_viewer_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[11]
+  member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
+}
+
 ########################################################
 
 ## Pub/Sub Deployer Service Account (CI/CD) ##
@@ -334,18 +346,6 @@ resource "google_storage_bucket" "dataflow_staging" {
   force_destroy               = false
 
   depends_on = [google_project_service.storage]
-}
-
-resource "google_storage_bucket_iam_member" "dataflow_staging_binding" {
-  bucket = google_storage_bucket.dataflow_staging.name
-  role   = var.storage_bucket_iam_roles[0]
-  member = "serviceAccount:${google_service_account.dataflow_service_account.email}"
-}
-
-resource "google_project_iam_member" "dataflow_storage_binding" {
-  project = var.project_id
-  role    = var.service_account_roles[1]
-  member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
 }
 
 ## Pub/Sub ##

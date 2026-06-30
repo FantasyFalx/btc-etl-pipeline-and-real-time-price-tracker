@@ -20,23 +20,41 @@ service_account_ids = [
   "data-flow-9999",
   "compute-8888",
   "storage-8888",
-  "pub-sub-deployer-8888"
+  "pub-sub-deployer-8888",
 ]
 
 service_account_display_names = [
   "data-flow-controller",
   "compute-controller",
   "storage-controller",
-  "pub-sub-deployer-controller"
+  "pub-sub-deployer-controller",
 ]
 
 repository_ids = [
   "pub-sub-script-repo",
 ]
 
+# service_account_roles index map (see main.tf bindings):
+#   [0]  dataflow.admin              -> data-flow-9999 (data_flow_admin_binding)
+#                                      -> pub-sub-deployer-8888 (deployer_dataflow_admin_binding)
+#   [1]  storage.admin               -> data-flow-9999 (dataflow_storage_binding)
+#   [2]  bigquery.dataEditor         -> data-flow-9999 (dataflow_bigquery_binding)
+#   [3]  pubsub.subscriber           -> data-flow-9999 (dataflow_pubsub_subscriber_binding)
+#   [4]  storage.objectAdmin         -> storage-8888 (storage_admin_binding)
+#   [5]  run.admin                   -> compute-8888 (compute_run_admin_binding)
+#   [6]  pubsub.publisher            -> compute-8888 (compute_pubsub_publisher_binding)
+#   [7]  artifactregistry.reader     -> compute-8888 (compute_artifact_registry_reader_binding)
+#   [8]  run.admin                   -> pub-sub-deployer-8888 (deployer_run_admin_binding)
+#   [9]  artifactregistry.writer     -> pub-sub-deployer-8888 (deployer_artifact_registry_writer_binding)
+#   [10] artifactregistry.reader     -> pub-sub-deployer-8888 (deployer_artifact_registry_reader_binding)
+#   [11] pubsub.viewer               -> data-flow-9999 (dataflow_pubsub_viewer_binding)
+#
+# Removed from Terraform (no longer in main.tf):
+#   - default Compute Engine SA bindings (storage.admin, cloudbuild.builds.editor, artifactregistry.writer)
+#   - dataflow_staging_binding (bucket-level storage.objectAdmin for data-flow-9999)
 service_account_roles = [
   "roles/dataflow.admin",
-  "roles/storage.objectAdmin",
+  "roles/storage.admin",
   "roles/bigquery.dataEditor",
   "roles/pubsub.subscriber",
   "roles/storage.objectAdmin",
@@ -46,12 +64,15 @@ service_account_roles = [
   "roles/run.admin",
   "roles/artifactregistry.writer",
   "roles/artifactregistry.reader",
+  "roles/pubsub.viewer",
 ]
 
 storage_bucket_names = [
   "staging-bucket-88888",
 ]
 
+# Unused by main.tf today; deployer staging access uses a hardcoded role in
+# deployer_staging_object_creator_binding. Kept because the variable is still declared.
 storage_bucket_iam_roles = [
   "roles/storage.objectAdmin",
 ]
