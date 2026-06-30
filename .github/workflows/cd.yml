@@ -12,6 +12,7 @@ env:
   ## TODO: Update the secret configs so no formatting and reference errors occur.
   GCP_PROJECT_ID: "bitcoin-streaming-etl-project"
   GAR_LOCATION: "us-central1"
+  DATAFLOW_ZONE: "us-central1-a"
   DATAFLOW_STAGING_BUCKET: "staging-bucket-88888"
 
   GCP_BUILD_AND_DEPLOY_KEY: ${{ secrets.BUILD_AND_DEPLOY_KEY }}
@@ -155,6 +156,8 @@ jobs:
             --template-file-gcs-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" \
             --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GAR_LOCATION }}" \
+            --zone "${{ env.DATAFLOW_ZONE }}" \
+            --launcher-machine-type "e2-standard-2" \
             --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
             --staging-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/staging" \
             --temp-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
