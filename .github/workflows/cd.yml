@@ -155,9 +155,9 @@ jobs:
             --template-file-gcs-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" \
             --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GAR_LOCATION }}" \
+            --zone "us-central1-a" \
             --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
             --staging-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/staging" \
-            --worker-zone "us-central1-a" \
             --temp-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
             --parameters "subscription=projects/${{ env.GCP_PROJECT_ID }}/subscriptions/btc_pull_topic,output=${{ env.GCP_PROJECT_ID }}.bitcoin_streaming_dataset.bitcoin-data-streaming-table,temp_location=gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
             --quiet
