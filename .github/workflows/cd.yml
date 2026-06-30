@@ -131,7 +131,6 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-        # TODO: Update the secret configs so no formatting and reference errors occur.
           credentials_json: ${{ env.GCP_BUILD_AND_DEPLOY_KEY }}
 
       - name: Set up Cloud SDK
@@ -156,7 +155,7 @@ jobs:
             --template-file-gcs-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" \
             --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GAR_LOCATION }}" \
-            --service-account "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
+            --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
             --staging-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/staging" \
             --worker-zone "us-central1-a" \
             --temp-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
