@@ -157,7 +157,7 @@ jobs:
             --project "${{ env.GCP_PROJECT_ID }}" \
             --region "${{ env.GAR_LOCATION }}" \
             --worker-zone "${{ env.DATAFLOW_ZONE }}" \
-            --launcher-machine-type "e2-standard-2" \
+            --launcher-machine-type "e2-medium" \
             --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
             --staging-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/staging" \
             --temp-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/tmp" \
