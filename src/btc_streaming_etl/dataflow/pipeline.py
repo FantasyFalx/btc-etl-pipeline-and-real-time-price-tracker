@@ -45,7 +45,7 @@ def pipeline_runner(argv=None) -> None:
         streaming_data = (
             
             btc_pipeline
-            | "Extracts the pub/sub message."
+            | "Extracts the pub/sub message."s
             >> beam.io.ReadFromPubSub(
                 subscription=template_args.subscription
             ).with_output_types(
