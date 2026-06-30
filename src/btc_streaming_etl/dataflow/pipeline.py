@@ -12,7 +12,6 @@ from apache_beam.options.pipeline_options import StandardOptions
 from btc_streaming_etl.dataflow.configs.configs import (
     TABLE_SCHEMA,
     OUTPUT_TABLE,
-    PIPELINE_OPTIONS,
     SUBSCRIPTION,
 )
 
@@ -73,7 +72,9 @@ def pipeline_runner(argv=None) -> None:
         )
 
 
+def run(argv=None) -> None:
+    pipeline_runner(argv)
+
+
 if __name__ == "__main__":
-    pipeline_runner()
-else: 
-    None
+    run()
