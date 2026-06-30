@@ -46,8 +46,10 @@ repository_ids = [
 #   [7]  artifactregistry.reader     -> compute-8888 (compute_artifact_registry_reader_binding)
 #   [8]  run.admin                   -> pub-sub-deployer-8888 (deployer_run_admin_binding)
 #   [9]  artifactregistry.writer     -> pub-sub-deployer-8888 (deployer_artifact_registry_writer_binding)
+#                                      -> data-flow-9999 (dataflow_artifact_registry_writer_binding)
 #   [10] artifactregistry.reader     -> pub-sub-deployer-8888 (deployer_artifact_registry_reader_binding)
 #   [11] pubsub.viewer               -> data-flow-9999 (dataflow_pubsub_viewer_binding)
+#   [12] cloudbuild.builds.editor     -> data-flow-9999 (dataflow_cloudbuild_editor_binding)
 #
 # Removed from Terraform (no longer in main.tf):
 #   - default Compute Engine SA bindings (storage.admin, cloudbuild.builds.editor, artifactregistry.writer)
@@ -65,6 +67,7 @@ service_account_roles = [
   "roles/artifactregistry.writer",
   "roles/artifactregistry.reader",
   "roles/pubsub.viewer",
+  "roles/cloudbuild.builds.editor",
 ]
 
 storage_bucket_names = [
