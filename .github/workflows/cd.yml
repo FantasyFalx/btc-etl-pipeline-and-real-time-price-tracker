@@ -155,7 +155,7 @@ jobs:
           gcloud dataflow flex-template run "btc-streaming-${{ github.run_id }}" \
             --template-file-gcs-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/templates/btc-dataflow-pipeline.json" \
             --project "${{ env.GCP_PROJECT_ID }}" \
-            --region "${{ env.GAR_LOCATION }}" \
+            --region "us-east1" \
             --launcher-machine-type "e2-medium" \
             --service-account-email "${{ env.DATAFLOW_SERVICE_ACCOUNT_EMAIL }}" \
             --staging-location "gs://${{ env.DATAFLOW_STAGING_BUCKET }}/staging" \
