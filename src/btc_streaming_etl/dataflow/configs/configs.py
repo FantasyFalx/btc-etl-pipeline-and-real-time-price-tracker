@@ -14,7 +14,6 @@ TEMP_LOCATION = "gs://staging-bucket-88888/tmp"
 ## runner options: DataflowRunner, DirectRunner
 RUNNER = "DataflowRunner"
 DIRECT_RUNNER = "DirectRunner"
-SETUP_FILE = "./configs/setup.py"
 LOCAL_FILE = "./src/btc_streaming_etl/dataflow/pipeline.py"
 
 SAVE_MAIN_SESSION = True
@@ -61,7 +60,7 @@ CONFIGS = {
     "staging_location": STAGING_LOCATION,
     "temp_location": TEMP_LOCATION,
     "runner": RUNNER,
-    "setup_file": SETUP_FILE,
+    "setup_file": LOCAL_FILE,
     "save_main_session": SAVE_MAIN_SESSION,
     "enable_preflight_validation": ENABLE_PRE_FLIGHT_VALIDATION,
 }

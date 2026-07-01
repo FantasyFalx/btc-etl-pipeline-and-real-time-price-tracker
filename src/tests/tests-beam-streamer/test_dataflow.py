@@ -11,10 +11,14 @@ from beam_constants import (
     MOCK_MESSAGE,
 )
 from btc_streaming_etl.dataflow.pipeline import (
-    MessageDecoder, PipelineLogger, JsonDecoder)
+    MessageDecoder,
+    PipelineLogger,
+    JsonDecoder,
+)
 
 # CUSTOM IMPORTS
 ##############
+
 
 ## Tests ##
 def test_json_decoder(bytes_mock_message):
@@ -27,6 +31,7 @@ def test_json_decoder(bytes_mock_message):
             | "Encode JSON Message" >> beam.ParDo(JsonDecoder())
         )
         assert_that(output, equal_to([MOCK_MESSAGE]))
+
 
 if __name__ == "__main__":
     None
