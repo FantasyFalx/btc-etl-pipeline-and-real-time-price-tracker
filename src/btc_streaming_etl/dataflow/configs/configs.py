@@ -1,3 +1,5 @@
+"""Configuration constants for the Dataflow pipeline, BigQuery output, and GCP resources."""
+
 # GCLOUD RUN CONFIGS/ PIPELINE COMMANDS
 TOPIC = "projects/bitcoin-streaming-etl-project/topics/btc_price_topic"
 SUBSCRIPTION = "projects/bitcoin-streaming-etl-project/subscriptions/btc_pull_topic"

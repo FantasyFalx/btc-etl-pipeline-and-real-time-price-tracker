@@ -1,3 +1,5 @@
+"""Apache Beam streaming pipeline that reads BTC messages from Pub/Sub and writes them to BigQuery."""
+
 # Standard libraries:
 import argparse
 import logging

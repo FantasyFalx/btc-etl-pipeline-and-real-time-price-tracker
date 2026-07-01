@@ -1,3 +1,5 @@
+"""Temporary entry script for manually running the YFinance streaming thread manager."""
+
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
 from btc_streaming_etl.pubsub.thread_manager import ThreadManager
 

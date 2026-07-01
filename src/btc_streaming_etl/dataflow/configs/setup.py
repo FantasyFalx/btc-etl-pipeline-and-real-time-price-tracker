@@ -1,3 +1,5 @@
+"""Setuptools setup file for packaging Apache Beam dependencies used by the Dataflow pipeline."""
+
 # Imports
 # Standard Libaries
 import setuptools

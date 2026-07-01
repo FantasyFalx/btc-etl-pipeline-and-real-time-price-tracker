@@ -1,3 +1,5 @@
+"""Legacy CoinGecko-to-Pub/Sub publisher that fetches BTC prices and publishes them via Secret Manager credentials."""
+
 # Standard libraries
 import json
 from datetime import datetime

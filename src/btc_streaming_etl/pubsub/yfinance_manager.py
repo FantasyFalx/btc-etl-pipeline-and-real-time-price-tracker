@@ -1,3 +1,5 @@
+"""YFinance manager module for WebSocket streaming, message handling, and schema validation."""
+
 # Standard libraries
 import logging
 from websockets.exceptions import ConnectionClosed
