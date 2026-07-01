@@ -35,8 +35,8 @@ repository_ids = [
 ]
 
 # service_account_roles index map (see main.tf bindings):
-#   [0]  dataflow.admin              -> data-flow-9999 (data_flow_admin_binding)
-#                                      -> pub-sub-deployer-8888 (deployer_dataflow_admin_binding)
+#   [0]  dataflow.admin              -> pub-sub-deployer-8888 (deployer_dataflow_admin_binding)
+#   [13] dataflow.worker             -> data-flow-9999 (dataflow_worker_binding)
 #   [1]  storage.admin               -> data-flow-9999 (dataflow_storage_binding)
 #   [2]  bigquery.dataEditor         -> data-flow-9999 (dataflow_bigquery_binding)
 #   [3]  pubsub.subscriber           -> data-flow-9999 (dataflow_pubsub_subscriber_binding)
@@ -68,6 +68,7 @@ service_account_roles = [
   "roles/artifactregistry.reader",
   "roles/pubsub.viewer",
   "roles/cloudbuild.builds.editor",
+  "roles/dataflow.worker",
 ]
 
 storage_bucket_names = [

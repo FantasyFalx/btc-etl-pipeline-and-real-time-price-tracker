@@ -196,9 +196,9 @@ resource "google_service_account" "storage_service_account" {
 
 ## Dataflow Service Account (project-level) ##
 
-resource "google_project_iam_member" "data_flow_admin_binding" {
+resource "google_project_iam_member" "dataflow_worker_binding" {
   project = var.project_id
-  role    = var.service_account_roles[0]
+  role    = var.service_account_roles[13]
   member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
 }
 
