@@ -7,12 +7,13 @@ import pytest
 from btc_streaming_etl.pubsub.thread_manager import ThreadManager
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
 from btc_streaming_etl.pubsub.pubsub_publisher import PubSubPublisher
+from threading_constants import MOCK_PATHS
 
 
 @pytest.fixture
 def yfinance_manager_factory(mocker):
     mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.YFinanceManager.run_socket",
+        MOCK_PATHS["run_socket"],
         new=mocker.MagicMock(),
     )
     return YFinanceManager()
@@ -21,7 +22,7 @@ def yfinance_manager_factory(mocker):
 @pytest.fixture
 def pubsub_publisher_factory(mocker):
     mocker.patch(
-        "btc_streaming_etl.pubsub.pubsub_publisher.PubSubPublisher.publish_message",
+        MOCK_PATHS["publish_message"],
         new=mocker.MagicMock(),
     )
     return PubSubPublisher()

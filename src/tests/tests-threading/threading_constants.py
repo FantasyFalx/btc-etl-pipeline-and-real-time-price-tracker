@@ -6,6 +6,12 @@
 # Constants
 THREAD_TEST_TICKER = "BTC-USD"
 
+## Mock Paths ##
+MOCK_PATHS = {
+    "run_socket": "btc_streaming_etl.pubsub.yfinance_manager.YFinanceManager.run_socket",
+    "publish_message": "btc_streaming_etl.pubsub.pubsub_publisher.PubSubPublisher.publish_message",
+}
+
 
 VALID_YFINANCE_BTC_MESSAGE = {
     "id": THREAD_TEST_TICKER,

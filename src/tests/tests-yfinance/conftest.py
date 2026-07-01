@@ -11,6 +11,7 @@ from websockets.exceptions import ConnectionClosed
 
 # Custom modules
 from btc_streaming_etl.pubsub.yfinance_manager import YFinanceManager
+from yfinance_constants import MOCK_PATHS
 
 
 # Fixtures
@@ -32,7 +33,7 @@ def mock_ticker():
 @pytest.fixture
 def mock_closed_connection(mocker, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.listen",
+        MOCK_PATHS["websocket_listen"],
         side_effect=ConnectionClosed(None, None),
     )
     return yfinance_manager_factory
@@ -41,7 +42,7 @@ def mock_closed_connection(mocker, yfinance_manager_factory):
 @pytest.fixture
 def mock_missing_ticker_error(mocker, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.subscribe",
+        MOCK_PATHS["websocket_subscribe"],
         side_effect=TypeError("Test error for if the ticker is None."),
     )
     return yfinance_manager_factory
@@ -50,7 +51,7 @@ def mock_missing_ticker_error(mocker, yfinance_manager_factory):
 @pytest.fixture
 def mock_invalid_ticker_error(mocker, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.subscribe",
+        MOCK_PATHS["websocket_subscribe"],
         side_effect=ValueError("Test error for if the ticker is invalid."),
     )
     return yfinance_manager_factory
@@ -59,7 +60,7 @@ def mock_invalid_ticker_error(mocker, yfinance_manager_factory):
 @pytest.fixture
 def mock_yfinance_set_socket(mocker, mock_socket, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket",
+        MOCK_PATHS["websocket"],
         return_value=mock_socket,
     )
     return yfinance_manager_factory
@@ -68,7 +69,7 @@ def mock_yfinance_set_socket(mocker, mock_socket, yfinance_manager_factory):
 @pytest.fixture
 def mock_yfinance_successful_run_socket(mocker, mock_socket, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket",
+        MOCK_PATHS["websocket"],
         return_value=mock_socket,
     )
     mock_socket.subscribe.return_value = True
@@ -79,7 +80,7 @@ def mock_yfinance_successful_run_socket(mocker, mock_socket, yfinance_manager_fa
 @pytest.fixture
 def mock_schema_validator_failure(mocker, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+        MOCK_PATHS["validate_message"],
         return_value=False,
     )
     return yfinance_manager_factory
@@ -88,7 +89,7 @@ def mock_schema_validator_failure(mocker, yfinance_manager_factory):
 @pytest.fixture
 def mock_schema_validator_success(mocker, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+        MOCK_PATHS["validate_message"],
         return_value=True,
     )
     return yfinance_manager_factory
@@ -97,7 +98,7 @@ def mock_schema_validator_success(mocker, yfinance_manager_factory):
 @pytest.fixture
 def mock_failed_handler(mocker, yfinance_manager_factory):
     mocker.patch(
-        "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+        MOCK_PATHS["validate_message"],
         return_value=False,
     )
     return yfinance_manager_factory
