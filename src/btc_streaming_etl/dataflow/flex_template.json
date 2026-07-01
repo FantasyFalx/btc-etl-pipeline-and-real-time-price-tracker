@@ -1,5 +1,5 @@
 {
-  "image": "us-central1-docker.pkg.dev/bitcoin-streaming-etl-project/pub-sub-script-repo/btc-dataflow-pipeline:latest",
+  "image": "us-central1-docker.pkg.dev/bitcoin-streaming-etl-project/pub-sub-script-repo/btc-dataflow-pipeline:beam-latest",
   "sdk_info": {
     "language": "PYTHON"
   },

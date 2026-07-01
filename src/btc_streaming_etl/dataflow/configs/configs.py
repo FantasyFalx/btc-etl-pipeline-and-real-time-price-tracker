@@ -31,16 +31,19 @@ PIPELINE_OPTIONS = {
 }
 
 # BIG QUERY CONFIGS
-TABLE_SCHEMA = """
-    id:STRING, price:FLOAT, time:STRING, currency:STRING, exchange:STRING,
-    quote_type:INTEGER, market_hours:INTEGER, change_percent:FLOAT,
-    day_volume:STRING, day_high:FLOAT, day_low:FLOAT, change:FLOAT,
-    open_price:FLOAT, last_size:STRING, price_hint:STRING, vol_24hr:STRING,
-    vol_all_currencies:STRING, from_currency:STRING, circulating_supply:FLOAT,
-    market_cap:FLOAT
-"""
+TABLE_SCHEMA = (
+    "id:STRING, price:FLOAT, time:STRING, currency:STRING, exchange:STRING, "
+    "quote_type:INTEGER, market_hours:INTEGER, change_percent:FLOAT, "
+    "day_volume:STRING, day_high:FLOAT, day_low:FLOAT, change:FLOAT, "
+    "open_price:FLOAT, last_size:STRING, price_hint:STRING, vol_24hr:STRING, "
+    "vol_all_currencies:STRING, from_currency:STRING, circulating_supply:FLOAT, "
+    "market_cap:FLOAT"
+)
 
-OUTPUT_TABLE = "bitcoin-streaming-etl-project.bitcoin_streaming_dataset.bitcoin-data-streaming-table"
+OUTPUT_TABLE = (
+    "bitcoin-streaming-etl-project:bitcoin_streaming_dataset."
+    "bitcoin-data-streaming-table"
+)
 
 PACKAGES = ["apache-beam[gcp]", "apache-beam"]
 

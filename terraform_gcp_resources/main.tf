@@ -120,6 +120,14 @@ provider "google" {
   project = var.project_id
 }
 
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
+locals {
+  default_compute_service_account = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
 
 ########################################################
 
@@ -188,9 +196,9 @@ resource "google_service_account" "storage_service_account" {
 
 ## Dataflow Service Account (project-level) ##
 
-resource "google_project_iam_member" "data_flow_admin_binding" {
+resource "google_project_iam_member" "dataflow_worker_binding" {
   project = var.project_id
-  role    = var.service_account_roles[0]
+  role    = var.service_account_roles[13]
   member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
 }
 
@@ -203,6 +211,18 @@ resource "google_project_iam_member" "dataflow_storage_binding" {
 resource "google_project_iam_member" "dataflow_pubsub_viewer_binding" {
   project = var.project_id
   role    = var.service_account_roles[11]
+  member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
+}
+
+resource "google_project_iam_member" "dataflow_cloudbuild_editor_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[12]
+  member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
+}
+
+resource "google_project_iam_member" "dataflow_artifact_registry_writer_binding" {
+  project = var.project_id
+  role    = var.service_account_roles[9]
   member  = "serviceAccount:${google_service_account.dataflow_service_account.email}"
 }
 
@@ -261,12 +281,34 @@ resource "google_artifact_registry_repository_iam_member" "deployer_writer_repo_
   member     = "serviceAccount:${google_service_account.pub_sub_deployer_service_account.email}"
 }
 
+resource "google_artifact_registry_repository_iam_member" "dataflow_writer_repo_binding" {
+  project    = var.project_id
+  location   = var.region
+  repository = google_artifact_registry_repository.pubsub_script_repo.name
+  role       = var.artifact_registry_iam_roles[0]
+  member     = "serviceAccount:${google_service_account.dataflow_service_account.email}"
+}
+
 resource "google_artifact_registry_repository_iam_member" "compute_reader_repo_binding" {
   project    = var.project_id
   location   = var.region
   repository = google_artifact_registry_repository.pubsub_script_repo.name
   role       = var.artifact_registry_iam_roles[1]
   member     = "serviceAccount:${google_service_account.compute_service_account.email}"
+}
+
+resource "google_artifact_registry_repository_iam_member" "default_compute_reader_repo_binding" {
+  project    = var.project_id
+  location   = var.region
+  repository = google_artifact_registry_repository.pubsub_script_repo.name
+  role       = var.artifact_registry_iam_roles[1]
+  member     = "serviceAccount:${local.default_compute_service_account}"
+}
+
+resource "google_storage_bucket_iam_member" "default_compute_staging_binding" {
+  bucket = google_storage_bucket.dataflow_staging.name
+  role   = var.storage_bucket_iam_roles[0]
+  member = "serviceAccount:${local.default_compute_service_account}"
 }
 
 resource "google_service_account_iam_member" "compute_sa_cd_actas_binding" {

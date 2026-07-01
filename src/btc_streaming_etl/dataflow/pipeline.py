@@ -12,7 +12,6 @@ from apache_beam.options.pipeline_options import StandardOptions
 from btc_streaming_etl.dataflow.configs.configs import (
     TABLE_SCHEMA,
     OUTPUT_TABLE,
-    PIPELINE_OPTIONS,
     SUBSCRIPTION,
 )
 
@@ -36,8 +35,10 @@ def pipeline_runner(argv=None) -> None:
     parser.add_argument("--output", default=OUTPUT_TABLE)
     template_args, pipeline_args = parser.parse_known_args(argv)
 
-    flag = "--dataflow_service_options=enable_preflight_validation=false"
-    options = PipelineOptions(pipeline_args, flags=[flag])
+    flag_args = "--dataflow_service_options=enable_preflight_validation=false"
+    pipeline_args.append(flag_args)
+    
+    options = PipelineOptions(pipeline_args)
     options.view_as(StandardOptions).streaming = True
 
     with beam.Pipeline(options=options) as btc_pipeline:
@@ -73,7 +74,9 @@ def pipeline_runner(argv=None) -> None:
         )
 
 
+def run(argv=None) -> None:
+    pipeline_runner(argv)
+
+
 if __name__ == "__main__":
-    pipeline_runner()
-else: 
-    None
+    run()
