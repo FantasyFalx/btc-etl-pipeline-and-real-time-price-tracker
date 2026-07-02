@@ -8,6 +8,8 @@ This project implements a scalable, real-time streaming ETL (Extract, Transform,
 
 > **Note:** `yfinance` is a third-party, unofficial Python library. It is **not** an official Yahoo Finance API or product, and its data access methods may change without notice.
 
+
+
 ## 🏗️ Architecture
 
 The pipeline consists of the following stages:
@@ -24,6 +26,8 @@ The pipeline consists of the following stages:
 4. **Infrastructure**
   - Managed via **Terraform**.
 
+
+
 ## 🛠️ Tech Stack
 
 - **Language**: Python 🐍
@@ -33,6 +37,8 @@ The pipeline consists of the following stages:
 - **Containerization**: Docker 🐳
 - **Compute**: Google Compute Engine (GCE), Cloud Run ⚡
 - **Data Services**: Pub/Sub, Dataflow, BigQuery
+
+
 
 ## 📂 Project Structure
 
@@ -53,6 +59,8 @@ Unit tests for yfinance, publisher, and threading modules.
 - `terraform_gcp_resources/main.tf`  
 Terraform configuration defining GCP resources (APIs, Service Accounts, IAM, Artifact Registry).
 
+
+
 ## ✨ Key Features
 
 - **Robust Error Handling:** Ingestion validates message schemas, handles WebSocket disconnects, and surfaces GCP publish errors via `GoogleAPICallError`.
@@ -60,11 +68,13 @@ Terraform configuration defining GCP resources (APIs, Service Accounts, IAM, Art
 - **Scalability:** Leverages serverless technologies (Pub/Sub, Dataflow, Cloud Run) to handle varying loads.
 - **IaC:** Fully reproducible infrastructure state using Terraform.
 
+
+
 ## 📝 Steps to Duplicate and Run Pipeline
 
 1. Clone the git repo to your local machine:
   ```bash
-    git clone <repository_url>
+    git clone https://github.com/FantasyFalx/btc-etl-pipeline-and-real-time-price-tracker
   ```
 2. Create a new branch:
   ```bash
@@ -111,12 +121,16 @@ Terraform configuration defining GCP resources (APIs, Service Accounts, IAM, Art
 14. In GCP console, verify your Cloud Run jobs, Dataflow pipelines, and BigQuery datasets/tables are present and active.
 15. In BigQuery, preview your table to verify that BTC price data is streaming.
 
+
+
 ## 🚀 Future Improvements
 
 - Implement Cloud Monitoring alerts for pipeline lag or ingestion failures.
 - Add Simple Moving Average (SMA) calculations to the Dataflow pipeline.
 - Implement web sockets to reduce latency of chart updates.
 - Implement machine learning models to utilize time series analysis to predict future price trends of Bitcoin.
+
+
 
 ## 📜 License
 
