@@ -3,6 +3,7 @@ name: CI
 on:
   pull_request:
 
+# Start of jobs. 
 jobs:
   pytest:
     runs-on: ubuntu-latest
