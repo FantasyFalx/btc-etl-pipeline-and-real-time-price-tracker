@@ -127,7 +127,6 @@ Terraform configuration defining GCP resources (APIs, Service Accounts, IAM, Art
 
 - Implement Cloud Monitoring alerts for pipeline lag or ingestion failures.
 - Add Simple Moving Average (SMA) calculations to the Dataflow pipeline.
-- Implement web sockets to reduce latency of chart updates.
 - Implement machine learning models to utilize time series analysis to predict future price trends of Bitcoin.
 
 
