@@ -46,14 +46,29 @@ btc_dashboard/.streamlit/secrets.toml
 btc_dashboard/configs/*.json
 .keys/*.json
 
-# Terraform
+# Terraform — ignore local, generated, and secret files; keep *.tfvars.example
 .terraform/
+**/.terraform/
+
 *.tfstate
 *.tfstate.*
+*.tfstate.backup
+
 *.tfvars
+*.tfvars.json
+*.auto.tfvars
 !*.tfvars.example
+
+tfplan
+*.tfplan
+*.tfplan.*
+
+.terraformrc
+terraform.rc
+
 crash.log
 crash.*.log
+
 override.tf
 override.tf.json
 *_override.tf
