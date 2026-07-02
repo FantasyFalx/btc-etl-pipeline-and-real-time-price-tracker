@@ -1,0 +1,14 @@
+[project]
+name = "btc-pubsub-messenger"
+version = "0.1.0"
+description = "Streams BTC prices from YFinance to GCP Pub/Sub."
+requires-python = ">=3.12"
+dependencies = [
+    "google-cloud-pubsub",
+    "yfinance",
+    "pydantic",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
