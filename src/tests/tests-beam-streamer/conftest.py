@@ -11,10 +11,12 @@ from beam_constants import (
     MOCK_MESSAGE,
 )
 
+
 @pytest.fixture
 def bytes_mock_message():
     mock_message = json.dumps(MOCK_MESSAGE)
-    return mock_message.encode('utf-8')
+    return mock_message.encode("utf-8")
+
 
 if __name__ == "__main__":
     None

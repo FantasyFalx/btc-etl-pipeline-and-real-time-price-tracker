@@ -1,3 +1,5 @@
+"""Configuration constants for Pub/Sub topics, GCP secrets, and schema validation keys."""
+
 # Move to and env file or secrets.
 PROJECT_ID = "bitcoin-streaming-etl-project"
 GECKO_SECRET_URI = f"projects/{PROJECT_ID}/secrets/coingecko-api-key/versions/1"

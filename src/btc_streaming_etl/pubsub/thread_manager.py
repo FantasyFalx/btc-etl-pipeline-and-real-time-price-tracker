@@ -1,3 +1,5 @@
+"""Thread manager module for coordinating producer and consumer threads between YFinance and Pub/Sub."""
+
 # IMPORT STANDARD LIBRARIES
 import threading
 from queue import Queue, Empty

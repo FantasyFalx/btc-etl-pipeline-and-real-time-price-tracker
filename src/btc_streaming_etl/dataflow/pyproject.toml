@@ -1,0 +1,12 @@
+[project]
+name = "btc-dataflow-pipeline"
+version = "0.1.0"
+description = "Apache Beam streaming pipeline from Pub/Sub to BigQuery."
+requires-python = ">=3.12"
+dependencies = [
+    "apache-beam[gcp]==2.74.0",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"

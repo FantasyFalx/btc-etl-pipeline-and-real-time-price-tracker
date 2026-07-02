@@ -1,3 +1,5 @@
+"""Data validator module for validating YFinance socket messages against a Pydantic schema."""
+
 # Standard libraries
 # 3rd party
 from pydantic import BaseModel, ValidationError

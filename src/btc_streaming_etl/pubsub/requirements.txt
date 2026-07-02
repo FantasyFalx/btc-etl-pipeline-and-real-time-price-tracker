@@ -1,4 +1,0 @@
-pycoingecko
-google-cloud-pubsub
-google-cloud-secret-manager
-google-api-python-client

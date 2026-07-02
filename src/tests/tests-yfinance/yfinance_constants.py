@@ -5,6 +5,14 @@
 # Constants
 YFINANCE_TEST_TICKER = "BTC-USD"
 
+## Mock Paths ##
+MOCK_PATHS = {
+    "websocket_listen": "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.listen",
+    "websocket_subscribe": "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket.subscribe",
+    "websocket": "btc_streaming_etl.pubsub.yfinance_manager.yf.WebSocket",
+    "validate_message": "btc_streaming_etl.pubsub.data_validator.DataValidator.validate_message",
+}
+
 VALID_YFINANCE_BTC_MESSAGE = {
     "id": YFINANCE_TEST_TICKER,
     "price": 75751.76,
